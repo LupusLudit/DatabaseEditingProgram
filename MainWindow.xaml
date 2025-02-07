@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatabaseEditingProgram"
         mc:Ignorable="d"
-        Title="Connection to database" Height="400" Width="400">
+        Title="Connection to database" Height="450" Width="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -13,11 +13,13 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="75"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
 
@@ -44,8 +46,20 @@
          VerticalContentAlignment="Center"
          Grid.Row="4" Grid.Column="1"/>
 
-        <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Center" Margin="0,25,0,0" Grid.ColumnSpan="2" Grid.Row="5"
+        <Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="50,30,0,0" Grid.ColumnSpan="2" Grid.Row="5"
                 Width="75" Height="25" Click="ConnectButton_Click"/>
-        
+
+        <Button x:Name="HelpButton" Content="Help?" HorizontalAlignment="Center" Margin="0,30,0,0" Grid.ColumnSpan="2" Grid.Row="5"
+        Width="75" Height="25" Click="HelpButton_Click"/>
+
+        <Button x:Name="CloseButton" Content="Close" HorizontalAlignment="Right" Margin="0,30,50,0" Grid.ColumnSpan="2" Grid.Row="5"
+        Width="75" Height="25" Click="CloseButton_Click"/>
+
+        <Label x:Name="StatusLabel" Content="Connecting . . ." 
+       HorizontalAlignment="Center" Margin="0,30,0,0"
+       Grid.Row="6" Grid.ColumnSpan="2"
+       Foreground="LightCoral" FontWeight="Bold" FontSize="20"
+       Visibility="Collapsed"/>
+
     </Grid>
 </Window>
