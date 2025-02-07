@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatabaseEditingProgram"
         mc:Ignorable="d"
-        Title="Connection to database" Height="450" Width="400">
+        Title="Connection to database" Height="450" Width="400"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -58,7 +59,7 @@
         <Label x:Name="StatusLabel" Content="Connecting . . ." 
        HorizontalAlignment="Center" Margin="0,30,0,0"
        Grid.Row="6" Grid.ColumnSpan="2"
-       Foreground="LightCoral" FontWeight="Bold" FontSize="20"
+       Foreground="Gray" FontWeight="Bold" FontSize="20"
        Visibility="Collapsed"/>
 
     </Grid>

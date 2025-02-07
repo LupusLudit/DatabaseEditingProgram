@@ -45,7 +45,7 @@ namespace DatabaseEditingProgram
 
             await Task.Delay(500);
 
-            UpdateConfig("DataSource", server);
+            UpdateConfig("DataSource", server); //Note: UpdateConfig code is NOT mine
             UpdateConfig("Database", database);
             UpdateConfig("Name", username);
             UpdateConfig("Password", password);
@@ -58,7 +58,7 @@ namespace DatabaseEditingProgram
             if (isConnected)
             {
                 MessageBox.Show("Connection successful", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                DatabaseWindow databaseWindow = new DatabaseWindow();
+                DatabaseWindow databaseWindow = new DatabaseWindow(database);
                 databaseWindow.Show();
                 this.Close();
             }
@@ -120,19 +120,6 @@ namespace DatabaseEditingProgram
             }
         }
 
-        public static void UpdateConfig(string key, string newValue)
-        {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-            if (config.AppSettings.Settings[key] != null)
-            {
-                config.AppSettings.Settings[key].Value = newValue;
-            }
-
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
-        }
-
         private bool ContainsWhiteSpaces(string server, string database, string username, string password)
         {
             return string.IsNullOrWhiteSpace(server) || string.IsNullOrWhiteSpace(database) ||
@@ -152,7 +139,7 @@ namespace DatabaseEditingProgram
             HelpButton.IsEnabled = true;
         }
 
-        //Note: this part of the code is NOT mine (Label animation)
+        //Note: this part of the code is NOT mine (Label animation & UpdateConfig)
         private async Task AnimateConnectingLabel(CancellationToken token)
         {
             string[] states = { "Connecting.", "Connecting..", "Connecting..." };
@@ -164,6 +151,19 @@ namespace DatabaseEditingProgram
                 index = (index + 1) % states.Length;
                 await Task.Delay(500); 
             }
+        }
+
+        public static void UpdateConfig(string key, string newValue)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            if (config.AppSettings.Settings[key] != null)
+            {
+                config.AppSettings.Settings[key].Value = newValue;
+            }
+
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
     }
