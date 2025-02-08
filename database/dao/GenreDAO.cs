@@ -1,11 +1,6 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DatabaseEditingProgram.database.dao
 {
@@ -32,9 +27,16 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-        public void Delete(Genre element)
+        public void Delete(Genre genre)
         {
-            throw new NotImplementedException();
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("DELETE FROM genre WHERE id = @id", conn))
+            {
+                command.Parameters.AddWithValue("@id", genre.ID);
+                command.ExecuteNonQuery();
+                genre.ID = 0;
+            }
         }
 
         public IEnumerable<Genre> GetAll()
@@ -61,7 +63,6 @@ namespace DatabaseEditingProgram.database.dao
         public Genre? GetByID(int id)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
-            Genre? genre = null;
 
             using (SqlCommand command = new SqlCommand("SELECT * FROM genre where id = @id", conn))
             {
@@ -70,14 +71,14 @@ namespace DatabaseEditingProgram.database.dao
                 {
                     while (reader.Read())
                     {
-                        genre = new databaseEntities.Genre(
+                        return new Genre(
                              reader.GetInt32(0),
                              reader.GetString(1)
                             );
                     }
                 }
             }
-            return genre;
+            return null;
         }
 
         public void Save(Genre genre)

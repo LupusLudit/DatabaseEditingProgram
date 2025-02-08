@@ -27,9 +27,16 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-        public void Delete(Publisher element)
+        public void Delete(Publisher publisher)
         {
-            throw new NotImplementedException();
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("DELETE FROM publisher WHERE id = @id", conn))
+            {
+                command.Parameters.AddWithValue("@id", publisher.ID);
+                command.ExecuteNonQuery();
+                publisher.ID = 0;
+            }
         }
 
         public IEnumerable<Publisher> GetAll()

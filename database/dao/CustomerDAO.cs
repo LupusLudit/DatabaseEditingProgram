@@ -1,6 +1,7 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
 using System.Security.Policy;
+using System.Windows.Controls;
 
 namespace DatabaseEditingProgram.database.dao
 {
@@ -29,9 +30,16 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-        public void Delete(Customer element)
+        public void Delete(Customer customer)
         {
-            throw new NotImplementedException();
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("DELETE FROM customer WHERE id = @id", conn))
+            {
+                command.Parameters.AddWithValue("@id", customer.ID);
+                command.ExecuteNonQuery();
+                customer.ID = 0;
+            }
         }
 
         public IEnumerable<Customer> GetAll()
