@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using Microsoft.Data.SqlClient;
-//Note: this part of the code is NOT mine (DatabaseSingle)
+//Note: This code was provided
 
 namespace DatabaseEditingProgram.database
 {

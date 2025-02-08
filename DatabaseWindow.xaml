@@ -37,7 +37,7 @@
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="VideoGameTable"/>
+                        <DataGrid x:Name="BookTable"/>
                     </ScrollViewer>
                 </Border>
             </Grid>
@@ -51,19 +51,19 @@
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="UserTable"/>
+                        <DataGrid x:Name="CustomerTable"/>
                     </ScrollViewer>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="GameStudioTable"/>
+                        <DataGrid x:Name="PublisherTable"/>
                     </ScrollViewer>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="GameGenreTable"/>
+                        <DataGrid x:Name="GenreTable"/>
                     </ScrollViewer>
                 </Border>
             </Grid>
