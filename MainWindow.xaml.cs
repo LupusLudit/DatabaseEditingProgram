@@ -109,10 +109,8 @@ namespace DatabaseEditingProgram
             try
             {
                 DatabaseSingleton.CloseConnection();
-                using (SqlConnection conn = DatabaseSingleton.GetInstance())
-                {
-                    return conn.State == System.Data.ConnectionState.Open;
-                }
+                SqlConnection conn = DatabaseSingleton.GetInstance();
+                return conn.State == System.Data.ConnectionState.Open;
             }
             catch (Exception)
             {
