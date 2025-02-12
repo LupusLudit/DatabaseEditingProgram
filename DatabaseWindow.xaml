@@ -63,7 +63,7 @@
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="GenreTable"/>
+                        <DataGrid x:Name="GenreTable" AutoGenerateColumns="True" IsReadOnly="False" CanUserAddRows="True" CanUserDeleteRows="True" CellEditEnding="GenreTable_CellEditEnding" PreviewKeyDown="GenreTable_PreviewKeyDown"/>
                     </ScrollViewer>
                 </Border>
             </Grid>
