@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatabaseEditingProgram"
         mc:Ignorable="d"
-        Title="Database" Height="770" Width="1024"
+        Title="Database" Height="800" Width="1400"
         ResizeMode="NoResize">
 
     <Window.DataContext>
@@ -57,25 +57,137 @@
                 </Grid.ColumnDefinitions>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="CustomerTable"/>
-                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Customers table" HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold" Grid.Row="0"/>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+                            <DataGrid x:Name="CustomerTable" AutoGenerateColumns="False" CanUserAddRows="True" 
+                                     CanUserDeleteRows="True" IsReadOnly="False"
+                                     ItemsSource="{Binding CustomerManager.Items}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="First Name" Binding="{Binding Name}" />
+                                    <DataGridTextColumn Header="Last Name" Binding="{Binding Surname}" />
+
+                                    <DataGridTemplateColumn Header="Birth Date">
+                                        <!-- Display mode -->
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding DateOfBirth, StringFormat=dd/MM/yyyy}" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <!-- Edit mode -->
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DateOfBirth, Mode=TwoWay}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Actions">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Content="Save" Command="{Binding DataContext.CustomerManager.SaveCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                    <Button Content="Delete" Command="{Binding DataContext.CustomerManager.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </ScrollViewer>
+                        
+                        <Border Grid.Row="2" Background="LightGray">
+                            <Button Content="Add New" Command="{Binding DataContext.CustomerManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Margin="2" HorizontalAlignment="Center" Height="20"/>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="PublisherTable"/>
-                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Publishers table" HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold" Grid.Row="0"/>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+                            <DataGrid x:Name="PublisherTable" AutoGenerateColumns="False" CanUserAddRows="True"
+                                        CanUserDeleteRows="True" IsReadOnly="False"
+                                        ItemsSource="{Binding PublisherManager.Items}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                    <DataGridTextColumn Header="Motto" Binding="{Binding Motto}" />
+
+                                    <DataGridTemplateColumn Header="Is Active">
+                                        <!-- Display mode -->
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding IsActive}" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <!-- Edit mode -->
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                          SelectedItem="{Binding IsActive, Mode=TwoWay}" Width="75"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+
+                                    <DataGridTemplateColumn Header="Actions">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Content="Save" Command="{Binding DataContext.PublisherManager.SaveCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                    <Button Content="Delete" Command="{Binding DataContext.PublisherManager.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </ScrollViewer>
+                        
+                        <Border Grid.Row="2" Background="LightGray">
+                            <Button Content="Add New" Command="{Binding DataContext.PublisherManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Margin="2" HorizontalAlignment="Center" Height="20"/>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="5">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
 
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0">
+                        <Label Content="Genres table" HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold" Grid.Row="0"/>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
                             <DataGrid x:Name="GenreTable" AutoGenerateColumns="False" CanUserAddRows="True"
                                         CanUserDeleteRows="True" IsReadOnly="False"
                                         ItemsSource="{Binding GenreManager.Items}">
@@ -97,7 +209,7 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </ScrollViewer>
-                        <Border Grid.Row="1" Background="LightGray">
+                        <Border Grid.Row="2" Background="LightGray">
                             <Button Content="Add New" Command="{Binding DataContext.GenreManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     Margin="2" HorizontalAlignment="Center" Height="20"/>
                         </Border>

@@ -5,7 +5,10 @@ namespace DatabaseEditingProgram.database.dao
 {
     public class PublisherDAO : IDAO<Publisher>
     {
-        public PublisherDAO() { }
+        public PublisherDAO()
+        {
+            CreateTable();
+        }
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -53,7 +56,7 @@ namespace DatabaseEditingProgram.database.dao
                             reader.GetInt32(0),
                             reader.GetString(1),
                             reader.GetString(2),
-                            (reader.GetInt32(3) == 1)
+                            reader.GetBoolean(3)
                             );
 
                         yield return publisher;
@@ -77,7 +80,7 @@ namespace DatabaseEditingProgram.database.dao
                             reader.GetInt32(0),
                             reader.GetString(1),
                             reader.GetString(2),
-                            (reader.GetInt32(3) == 1)
+                            reader.GetBoolean(3)
                             );
                     }
                 }

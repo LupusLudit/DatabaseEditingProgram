@@ -8,7 +8,10 @@ namespace DatabaseEditingProgram.database.dao
     public class CustomerDAO : IDAO<Customer>
     {
 
-        public CustomerDAO() { }
+        public CustomerDAO()
+        {
+            CreateTable();
+        }
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

@@ -27,7 +27,6 @@ namespace DatabaseEditingProgram.managers
             Genre newGenre = new Genre("New Genre");
             DAO.Save(newGenre);
             Items.Add(newGenre);
-            Console.WriteLine("Adding new genre");
         }
     }
 

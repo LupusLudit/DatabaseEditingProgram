@@ -5,7 +5,10 @@ namespace DatabaseEditingProgram.database.dao
 {
     public class BookDAO: IDAO<Book>
     {
-        public BookDAO() { }
+        public BookDAO()
+        {
+            CreateTable();
+        }
 
         public void CreateTable()
         {

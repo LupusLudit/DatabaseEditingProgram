@@ -6,7 +6,10 @@ namespace DatabaseEditingProgram.database.dao
 {
     public class OrderDAO : IDAO<Order>
     {
-        public OrderDAO() { }
+        public OrderDAO()
+        {
+            CreateTable();
+        }
 
         public void CreateTable()
         {
