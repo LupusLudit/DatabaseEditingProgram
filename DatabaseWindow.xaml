@@ -69,13 +69,17 @@
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" Margin="5">
-                    <StackPanel>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0">
                             <DataGrid x:Name="GenreTable" AutoGenerateColumns="False" CanUserAddRows="True"
-                                CanUserDeleteRows="True" IsReadOnly="False"
-                                ItemsSource="{Binding GenreManager.Items}">
+                                        CanUserDeleteRows="True" IsReadOnly="False"
+                                        ItemsSource="{Binding GenreManager.Items}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
 
                                     <DataGridTemplateColumn Header="Actions">
@@ -83,10 +87,9 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <Button Content="Save" Command="{Binding DataContext.GenreManager.SaveCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}" Margin="2"/>
+                                                            CommandParameter="{Binding}" Margin="5"/>
                                                     <Button Content="Delete" Command="{Binding DataContext.GenreManager.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}" Margin="2"/>
-
+                                                            CommandParameter="{Binding}" Margin="5"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -94,10 +97,14 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </ScrollViewer>
-                        <Button Content="Add new" Command="{Binding DataContext.GenreManager.AddNew, RelativeSource={RelativeSource AncestorType=Window}}"
-                            CommandParameter="{Binding}" Margin="2" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                        <Border Grid.Row="1" Background="LightGray">
+                            <Button Content="Add New" Command="{Binding DataContext.GenreManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Margin="2" HorizontalAlignment="Center" Height="20"/>
+                        </Border>
+
+                    </Grid>
                 </Border>
+
 
             </Grid>
         </Grid>

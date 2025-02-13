@@ -1,5 +1,7 @@
-﻿using DatabaseEditingProgram.database.dao;
+﻿using DatabaseEditingProgram.database;
+using DatabaseEditingProgram.database.dao;
 using DatabaseEditingProgram.database.databaseEntities;
+using Microsoft.Data.SqlClient;
 
 namespace DatabaseEditingProgram.managers
 {
@@ -20,13 +22,12 @@ namespace DatabaseEditingProgram.managers
             Items.Remove(genre);
         }
 
-        //TODO: fix adding a new genre
-
         protected override void AddNew()
         {
             Genre newGenre = new Genre("New Genre");
             DAO.Save(newGenre);
             Items.Add(newGenre);
+            Console.WriteLine("Adding new genre");
         }
     }
 
