@@ -137,7 +137,11 @@ namespace DatabaseEditingProgram
             HelpButton.IsEnabled = true;
         }
 
-        //Note: this part of the code is NOT mine (Label animation & UpdateConfig)
+        /*
+         * Note: this part of the code is NOT entirely mine (Label animation & UpdateConfig)
+         * Inspiration: https://dotnettutorials.net/lesson/how-to-cancel-a-task-in-csharp/
+         * Inspiration: https://stackoverflow.com/questions/1357240/change-the-value-in-app-config-file-dynamically
+         */
         private async Task AnimateConnectingLabel(CancellationToken token)
         {
             string[] states = { "Connecting.", "Connecting..", "Connecting..." };

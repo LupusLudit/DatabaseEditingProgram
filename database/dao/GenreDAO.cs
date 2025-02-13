@@ -7,7 +7,9 @@ namespace DatabaseEditingProgram.database.dao
     public class GenreDAO : IDAO<Genre>
     {
 
-        public GenreDAO() { }
+        public GenreDAO() {
+            CreateTable();
+        }
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

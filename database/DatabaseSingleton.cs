@@ -25,10 +25,7 @@ namespace DatabaseEditingProgram.database
 
                 conn = new SqlConnection(consStringBuilder.ConnectionString);
                 Console.WriteLine(consStringBuilder.ConnectionString);
-                if (conn.State != System.Data.ConnectionState.Open)
-                {
-                    conn.Open();
-                }
+                conn.Open();
             }
             return conn;
         }
