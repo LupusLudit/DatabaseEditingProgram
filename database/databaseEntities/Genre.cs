@@ -25,5 +25,10 @@ namespace DatabaseEditingProgram.database.databaseEntities
             this.id = 0;
             this.name = name;
         }
+
+        public override string? ToString()
+        {
+            return $"{Name}";
+        }
     }
 }

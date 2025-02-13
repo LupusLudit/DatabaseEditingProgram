@@ -43,9 +43,94 @@
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DataGrid x:Name="BookTable"/>
-                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Books table" HorizontalContentAlignment="Center"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                FontWeight="Bold" Grid.Row="0"/>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+                            <DataGrid x:Name="BooksTable" AutoGenerateColumns="False" CanUserAddRows="True" 
+                                    CanUserDeleteRows="True" IsReadOnly="False"
+                                    ItemsSource="{Binding BookManager.Items}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+
+                                    <DataGridTemplateColumn Header="Is Signed">
+                                        <!-- Display mode -->
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding IsSigned}" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <!-- Edit mode -->
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                          SelectedItem="{Binding IsSigned, Mode=TwoWay}" Width="75"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+
+                                    <DataGridTemplateColumn Header="Genre">
+                                        <!-- Display mode -->
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Genre}" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <!-- Edit mode -->
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.GenresLookUp, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                          SelectedItem="{Binding Genre, Mode=TwoWay}" Width="75"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Publisher">
+                                        <!-- Display mode -->
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Publisher}" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <!-- Edit mode -->
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.PublishersLookUp, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                          SelectedItem="{Binding Publisher, Mode=TwoWay}" Width="75"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Actions">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Content="Save" Command="{Binding DataContext.BookManager.SaveCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                    <Button Content="Delete" Command="{Binding DataContext.BookManager.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}" Margin="5"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </ScrollViewer>
+                        <Border Grid.Row="2" Background="LightGray">
+                            <Button Content="Add New" Command="{Binding DataContext.BookManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Margin="2" HorizontalAlignment="Center" Height="20"/>
+                        </Border>
+                    </Grid>
                 </Border>
             </Grid>
 

@@ -9,10 +9,11 @@ namespace DatabaseEditingProgram.managers
     {
         public GenreTableManager() : base(new GenreDAO()) {}
 
-        protected override void Save(Genre genre)
+        protected override void AddNew()
         {
-            if (genre == null) return;
+            Genre genre = new Genre("New Genre");
             DAO.Save(genre);
+            Items.Add(genre);
         }
 
         protected override void Delete(Genre genre)
@@ -22,12 +23,12 @@ namespace DatabaseEditingProgram.managers
             Items.Remove(genre);
         }
 
-        protected override void AddNew()
+        protected override void Save(Genre genre)
         {
-            Genre newGenre = new Genre("New Genre");
-            DAO.Save(newGenre);
-            Items.Add(newGenre);
+            if (genre == null) return;
+            DAO.Save(genre);
         }
+
     }
 
 }

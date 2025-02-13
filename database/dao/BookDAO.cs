@@ -1,9 +1,10 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DatabaseEditingProgram.database.dao
 {
-    public class BookDAO: IDAO<Book>
+    public class BookDAO : IDAO<Book>
     {
         public BookDAO()
         {
@@ -51,28 +52,31 @@ namespace DatabaseEditingProgram.database.dao
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
 
-            using (SqlCommand command = new SqlCommand("SELECT * FROM book", conn))
+            string query = @"
+                    SELECT b.id, b.title, b.is_signed, b.price, 
+                           g.id AS genre_id, g.name AS genre_name,
+                           p.id AS publisher_id, p.name AS publisher_name, p.motto, p.active
+                    FROM book b
+                    JOIN genre g ON b.genre_id = g.id
+                    JOIN publisher p ON b.publisher_id = p.id";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        int genreID = reader.GetInt32(4);
-                        int publisherID = reader.GetInt32(5);
+                        Genre genre = new Genre(reader.GetInt32(4), reader.GetString(5));
+                        Publisher publisher = new Publisher(reader.GetInt32(6), reader.GetString(7), reader.GetString(8), reader.GetBoolean(9));
 
-                        Genre genre = new GenreDAO().GetByID(genreID);
-                        Publisher publisher = new PublisherDAO().GetByID(publisherID);
-
-                        Book book = new Book(
+                        yield return new Book(
                             reader.GetInt32(0),
                             reader.GetString(1),
                             reader.GetBoolean(2),
-                            reader.GetFloat(3),
+                            (float)reader.GetDouble(3),
                             genre,
                             publisher
                         );
-
-                        yield return book;
                     }
                 }
             }
@@ -83,27 +87,33 @@ namespace DatabaseEditingProgram.database.dao
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
 
-            using (SqlCommand command = new SqlCommand("SELECT * FROM book", conn))
+            string query = @"
+                    SELECT b.id, b.title, b.is_signed, b.price, 
+                           g.id AS genre_id, g.name AS genre_name,
+                           p.id AS publisher_id, p.name AS publisher_name, p.motto, p.active
+                    FROM book b
+                    JOIN genre g ON b.genre_id = g.id
+                    JOIN publisher p ON b.publisher_id = p.id
+                    WHERE b.id = @id";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
             {
+                command.Parameters.AddWithValue("@id", id);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        int genreID = reader.GetInt32(4);
-                        int publisherID = reader.GetInt32(5);
-
-                        Genre genre = new GenreDAO().GetByID(genreID);
-                        Publisher publisher = new PublisherDAO().GetByID(publisherID);
+                        Genre genre = new Genre(reader.GetInt32(4), reader.GetString(5));
+                        Publisher publisher = new Publisher(reader.GetInt32(6), reader.GetString(7), reader.GetString(8), reader.GetBoolean(9));
 
                         return new Book(
                             reader.GetInt32(0),
                             reader.GetString(1),
                             reader.GetBoolean(2),
-                            reader.GetFloat(3),
+                            (float)reader.GetDouble(3),
                             genre,
                             publisher
                         );
-
                     }
                 }
             }

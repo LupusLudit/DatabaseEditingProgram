@@ -35,5 +35,9 @@ namespace DatabaseEditingProgram.database.databaseEntities
             this.isActive = isActive;
         }
 
+        public override string? ToString()
+        {
+            return $"{Name}";
+        }
     }
 }
