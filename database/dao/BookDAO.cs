@@ -1,7 +1,5 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
-using static System.Reflection.Metadata.BlobBuilder;
-
 namespace DatabaseEditingProgram.database.dao
 {
     public class BookDAO : IDAO<Book>
@@ -52,15 +50,15 @@ namespace DatabaseEditingProgram.database.dao
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
 
-            string query = @"
-                    SELECT b.id, b.title, b.is_signed, b.price, 
-                           g.id AS genre_id, g.name AS genre_name,
-                           p.id AS publisher_id, p.name AS publisher_name, p.motto, p.active
-                    FROM book b
-                    JOIN genre g ON b.genre_id = g.id
-                    JOIN publisher p ON b.publisher_id = p.id";
+            string selectBooks = @"
+                    SELECT book.id, book.title, book.is_signed, book.price, 
+                    genre.id, genre.name,
+                    publisher.id, publisher.name, publisher.motto, publisher.active
+                    FROM book
+                    JOIN genre ON book.genre_id = genre.id
+                    JOIN publisher ON book.publisher_id = publisher.id";
 
-            using (SqlCommand command = new SqlCommand(query, conn))
+            using (SqlCommand command = new SqlCommand(selectBooks, conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -87,16 +85,16 @@ namespace DatabaseEditingProgram.database.dao
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
 
-            string query = @"
-                    SELECT b.id, b.title, b.is_signed, b.price, 
-                           g.id AS genre_id, g.name AS genre_name,
-                           p.id AS publisher_id, p.name AS publisher_name, p.motto, p.active
-                    FROM book b
-                    JOIN genre g ON b.genre_id = g.id
-                    JOIN publisher p ON b.publisher_id = p.id
-                    WHERE b.id = @id";
+            string selectBook = @"
+                    SELECT book.id, book.title, book.is_signed, book.price, 
+                    genre.id, genre.name,
+                    publisher.id, publisher.name, publisher.motto, publisher.active
+                    FROM book
+                    JOIN genre ON book.genre_id = genre.id
+                    JOIN publisher ON book.publisher_id = publisher.id
+                    WHERE book.id = @id";
 
-            using (SqlCommand command = new SqlCommand(query, conn))
+            using (SqlCommand command = new SqlCommand(selectBook, conn))
             {
                 command.Parameters.AddWithValue("@id", id);
                 using (SqlDataReader reader = command.ExecuteReader())
