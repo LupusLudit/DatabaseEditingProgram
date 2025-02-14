@@ -17,6 +17,7 @@ namespace DatabaseEditingProgram.managers
         {
             this.loadedGenres = loadedGenres;
             this.loadedPublishers = loadedPublishers;
+
             this.loadedGenres.CollectionChanged += OnGenreCollectionChanged;
             this.loadedPublishers.CollectionChanged += OnPublisherCollectionChanged;
         }

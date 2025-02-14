@@ -7,7 +7,6 @@
         private string surname;
         private DateTime dateOfBirth;
 
-
         public int ID { get { return id; } set { id = value; } }
         public string Name { get { return name; } set { name = value; } }
         public string Surname { get { return surname; } set { surname = value; } }
@@ -28,5 +27,11 @@
             this.surname = surname;
             this.dateOfBirth = dateOfBirth;
         }
+
+        public override string? ToString()
+        {
+            return $"{Name} {Surname} - {dateOfBirth:yyyy-MM-dd}";
+        }
+
     }
 }

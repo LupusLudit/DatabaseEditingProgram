@@ -41,5 +41,10 @@ namespace DatabaseEditingProgram.database.databaseEntities
             this.genre = genre;
             this.publisher = publisher;
         }
+
+        public override string? ToString()
+        {
+            return $"{Title}";
+        }
     }
 }
