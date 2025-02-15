@@ -13,6 +13,7 @@ namespace DatabaseEditingProgram.database.dao
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            RemoveIncorrectFormat();
 
             string createPurchaseTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'purchase')
@@ -88,7 +89,6 @@ namespace DatabaseEditingProgram.database.dao
                 }
             }
         }
-
 
         public Purchase? GetByID(int id)
         {
@@ -177,5 +177,94 @@ namespace DatabaseEditingProgram.database.dao
                 }
             }
         }
+
+        /*
+         * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
+         * it was partially AI generated and I took inspiration from these sites:
+         * Inspiration: https://learn.microsoft.com/en-us/sql/relational-databases/system-information-schema-views/system-information-schema-views-transact-sql?view=sql-server-ver16
+         * Inspiration: https://database.guide/understanding-information_schema-in-sql/
+         * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
+         */
+        public void RemoveIncorrectFormat()
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+            string checkTableSchema = @"
+                IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'purchase')
+                BEGIN
+                    DECLARE @mismatch BIT = 0;
+
+                    -- Check if 'id' column exists with the correct type and is an identity column
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'id' 
+                        AND DATA_TYPE = 'int' AND COLUMNPROPERTY(object_id('purchase'), 'id', 'IsIdentity') = 1
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'customer_id' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'customer_id' 
+                        AND DATA_TYPE = 'int'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'book_id' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'book_id' 
+                        AND DATA_TYPE = 'int'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'surcharge' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'surcharge' 
+                        AND DATA_TYPE = 'float'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'purchase_date' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'purchase_date' 
+                        AND DATA_TYPE = 'date'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'purchase_time' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'purchase' AND COLUMN_NAME = 'purchase_time' 
+                        AND DATA_TYPE = 'time'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Drop table if it does not match the expected format
+                    IF @mismatch = 1
+                    BEGIN
+                        DROP TABLE purchase;
+                    END
+                END";
+
+            using (SqlCommand command = new SqlCommand(checkTableSchema, conn))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
     }
 }

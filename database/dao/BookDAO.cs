@@ -12,6 +12,7 @@ namespace DatabaseEditingProgram.database.dao
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            RemoveIncorrectFormat();
 
             string createCustomerTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'book')
@@ -158,6 +159,97 @@ namespace DatabaseEditingProgram.database.dao
 
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+
+        /*
+         * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
+         * it was partially AI generated and I took inspiration from these sites:
+         * Inspiration: https://learn.microsoft.com/en-us/sql/relational-databases/system-information-schema-views/system-information-schema-views-transact-sql?view=sql-server-ver16
+         * Inspiration: https://database.guide/understanding-information_schema-in-sql/
+         * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
+         */
+
+        public void RemoveIncorrectFormat()
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            string checkTableSchema = @"
+                IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'book')
+                BEGIN
+                    DECLARE @mismatch BIT = 0;
+
+                    -- Check if 'id' column exists with the correct type and identity property
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'id' 
+                        AND DATA_TYPE = 'int' AND COLUMNPROPERTY(object_id('book'), 'id', 'IsIdentity') = 1
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'title' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'title' 
+                        AND DATA_TYPE = 'varchar' AND CHARACTER_MAXIMUM_LENGTH = 255
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'is_signed' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'is_signed' 
+                        AND DATA_TYPE = 'bit'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'price' column exists with the correct type
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'price' 
+                        AND DATA_TYPE = 'float'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'genre_id' column exists and is linked correctly
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'genre_id' 
+                        AND DATA_TYPE = 'int'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Check if 'publisher_id' column exists and is linked correctly
+                    IF NOT EXISTS (
+                        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'book' AND COLUMN_NAME = 'publisher_id' 
+                        AND DATA_TYPE = 'int'
+                    )
+                    BEGIN
+                        SET @mismatch = 1;
+                    END
+
+                    -- Drop table if it does not match the expected format
+                    IF @mismatch = 1
+                    BEGIN
+                        DROP TABLE IF EXISTS purchase;
+                        DROP TABLE book;
+                    END
+                END";
+
+            using (SqlCommand command = new SqlCommand(checkTableSchema, conn))
+            {
+                command.ExecuteNonQuery();
             }
         }
 

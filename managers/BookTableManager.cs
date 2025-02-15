@@ -18,8 +18,8 @@ namespace DatabaseEditingProgram.managers
             this.loadedGenres = loadedGenres;
             this.loadedPublishers = loadedPublishers;
 
-            this.loadedGenres.CollectionChanged += OnGenreCollectionChanged;
-            this.loadedPublishers.CollectionChanged += OnPublisherCollectionChanged;
+            this.loadedGenres.CollectionChanged += OnCollectionChanged;
+            this.loadedPublishers.CollectionChanged += OnCollectionChanged;
         }
         protected override void AddNew()
         {
@@ -62,47 +62,15 @@ namespace DatabaseEditingProgram.managers
         }
 
         /*
-         * Note: this part of the code is NOT entirely mine (OnGenreCollectionChanged & OnPublisherCollectionChanged)
+         * Note: this part of the code is NOT entirely mine (OnCollectionChanged)
          * Inspiration: https://stackoverflow.com/questions/4588359/implementing-collectionchanged
          */
 
-        private void OnGenreCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                if (e.OldItems != null)
-                {
-                    foreach (Genre removedGenre in e.OldItems)
-                    {
-                        var booksToRemove = Items.Where(b => b.Genre.ID == removedGenre.ID).ToList();
-                        foreach (var book in booksToRemove)
-                        {
-                            DAO.Delete(book);
-                        }
-                    }
-                    ReloadBooks();
-                }
-            }
+            ReloadBooks();
         }
 
-        private void OnPublisherCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                if (e.OldItems != null)
-                {
-                    foreach (Publisher removedPublisher in e.OldItems)
-                    {
-                        var booksToRemove = Items.Where(b => b.Publisher.ID == removedPublisher.ID).ToList();
-                        foreach (var book in booksToRemove)
-                        {
-                            DAO.Delete(book);
-                        }
-                    }
-                    ReloadBooks();
-                }
-            }
-        }
 
     }
 }

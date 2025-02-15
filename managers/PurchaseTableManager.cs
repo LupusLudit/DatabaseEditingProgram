@@ -11,19 +11,25 @@ namespace DatabaseEditingProgram.managers
     {
         private ObservableCollection<Customer> loadedCustomers;
         private ObservableCollection<Book> loadedBooks;
+        private ObservableCollection<Genre> loadedGenres;
+        private ObservableCollection<Publisher> loadedPublishers;
 
-        public PurchaseTableManager(ObservableCollection<Customer> loadedCustomers, ObservableCollection<Book> loadedBooks)
-            : base(new PurchaseDAO())
+        public PurchaseTableManager(ObservableCollection<Customer> loadedCustomers, ObservableCollection<Book> loadedBooks,
+            ObservableCollection<Genre> loadedGenres, ObservableCollection<Publisher> loadedPublishers) : base(new PurchaseDAO())
         {
             this.loadedCustomers = loadedCustomers;
             this.loadedBooks = loadedBooks;
+            this.loadedGenres = loadedGenres;
+            this.loadedPublishers = loadedPublishers;
 
-            this.loadedCustomers.CollectionChanged += OnCustomerCollectionChanged;
-            this.loadedBooks.CollectionChanged += OnBookCollectionChanged;
+            this.loadedCustomers.CollectionChanged += OnCollectionChanged;
+            this.loadedBooks.CollectionChanged += OnCollectionChanged;
+            this.loadedGenres.CollectionChanged += OnCollectionChanged;
+            this.loadedPublishers.CollectionChanged += OnCollectionChanged;
         }
         protected override void AddNew()
         {
-            if (loadedCustomers.Any() && loadedBooks.Any())
+            if (loadedCustomers.Any() && loadedBooks.Any() && loadedGenres.Any() && loadedPublishers.Any())
             {
                 Customer firstCustomer = loadedCustomers.First();
                 Book firstBook = loadedBooks.First();
@@ -34,7 +40,7 @@ namespace DatabaseEditingProgram.managers
             }
             else
             {
-                MessageBox.Show("If creating a new purchase, there must be some customers and books in the database first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("If creating a new purchase, there must be some customers and books (genres & publishers) in the database first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -62,46 +68,14 @@ namespace DatabaseEditingProgram.managers
         }
 
         /*
-         * Note: this part of the code is NOT entirely mine (OnCustomerCollectionChanged & OnBookCollectionChanged)
+         * Note: this part of the code is NOT entirely mine (OnCollectionChanged)
          * Inspiration: https://stackoverflow.com/questions/4588359/implementing-collectionchanged
         */
 
-        private void OnCustomerCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                if (e.OldItems != null)
-                {
-                    foreach (Customer removedCustomer in e.OldItems)
-                    {
-                        var purchasesToRemove = Items.Where(p => p.Customer.ID == removedCustomer.ID).ToList();
-                        foreach (var purchase in purchasesToRemove)
-                        {
-                            DAO.Delete(purchase);
-                        }
-                    }
-                    ReloadPurchases();
-                }
-            }
+            ReloadPurchases();
         }
 
-        private void OnBookCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                if (e.OldItems != null)
-                {
-                    foreach (Book removedBook in e.OldItems)
-                    {
-                        var purchasesToRemove = Items.Where(p => p.Book.ID == removedBook.ID).ToList();
-                        foreach (var purchase in purchasesToRemove)
-                        {
-                            DAO.Delete(purchase);
-                        }
-                    }
-                    ReloadPurchases();
-                }
-            }
-        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using DatabaseEditingProgram.database.dao;
-using DatabaseEditingProgram.database.databaseEntities;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using DatabaseEditingProgram.database;
 
 namespace DatabaseEditingProgram

@@ -1,11 +1,7 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using DatabaseEditingProgram.managers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DatabaseEditingProgram
 {
@@ -38,7 +34,7 @@ namespace DatabaseEditingProgram
             CustomersLookUp = CustomerManager.Items;
             BooksLookUp = BookManager.Items;
 
-            PurchaseManager = new PurchaseTableManager(CustomersLookUp, BooksLookUp);
+            PurchaseManager = new PurchaseTableManager(CustomersLookUp, BooksLookUp, GenresLookUp, PublishersLookUp);
         }
     }
 }

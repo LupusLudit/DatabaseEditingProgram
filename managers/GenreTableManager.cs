@@ -1,7 +1,5 @@
-﻿using DatabaseEditingProgram.database;
-using DatabaseEditingProgram.database.dao;
+﻿using DatabaseEditingProgram.database.dao;
 using DatabaseEditingProgram.database.databaseEntities;
-using Microsoft.Data.SqlClient;
 
 namespace DatabaseEditingProgram.managers
 {

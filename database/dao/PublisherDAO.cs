@@ -12,6 +12,7 @@ namespace DatabaseEditingProgram.database.dao
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            RemoveIncorrectFormat();
 
             string createCustomerTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'publisher')
@@ -114,5 +115,82 @@ namespace DatabaseEditingProgram.database.dao
                 }
             }
         }
+
+        /*
+         * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
+         * it was partially AI generated and I took inspiration from these sites:
+         * Inspiration: https://learn.microsoft.com/en-us/sql/relational-databases/system-information-schema-views/system-information-schema-views-transact-sql?view=sql-server-ver16
+         * Inspiration: https://database.guide/understanding-information_schema-in-sql/
+         * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
+         */
+        public void RemoveIncorrectFormat()
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+            string checkTableSchema = @"
+                    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'publisher')
+                    BEGIN
+                        DECLARE @mismatch BIT = 0;
+
+                        -- Check if 'id' column exists with correct type and is an identity column
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM INFORMATION_SCHEMA.COLUMNS 
+                            WHERE TABLE_NAME = 'publisher' AND COLUMN_NAME = 'id' 
+                            AND DATA_TYPE = 'int' 
+                            AND COLUMNPROPERTY(object_id('publisher'), 'id', 'IsIdentity') = 1
+                        )
+                        BEGIN
+                            SET @mismatch = 1;
+                        END
+
+                        -- Check if 'name' column exists with correct type
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM INFORMATION_SCHEMA.COLUMNS 
+                            WHERE TABLE_NAME = 'publisher' AND COLUMN_NAME = 'name' 
+                            AND DATA_TYPE = 'varchar'
+                        )
+                        BEGIN
+                            SET @mismatch = 1;
+                        END
+
+                        -- Check if 'motto' column exists with correct type
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM INFORMATION_SCHEMA.COLUMNS 
+                            WHERE TABLE_NAME = 'publisher' AND COLUMN_NAME = 'motto' 
+                            AND DATA_TYPE = 'varchar'
+                        )
+                        BEGIN
+                            SET @mismatch = 1;
+                        END
+
+                        -- Check if 'active' column exists with correct type
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM INFORMATION_SCHEMA.COLUMNS 
+                            WHERE TABLE_NAME = 'publisher' AND COLUMN_NAME = 'active' 
+                            AND DATA_TYPE = 'bit'
+                        )
+                        BEGIN
+                            SET @mismatch = 1;
+                        END
+
+                        -- Drop table if it does not match expected format
+                        IF @mismatch = 1
+                        BEGIN
+                            DROP TABLE IF EXISTS purchase;
+                            DROP TABLE IF EXISTS book;
+                            DROP TABLE publisher;
+                        END
+                    END";
+
+            using (SqlCommand command = new SqlCommand(checkTableSchema, conn))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
+
     }
 }
