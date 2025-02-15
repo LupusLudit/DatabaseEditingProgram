@@ -178,6 +178,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        //Not implemented for this class
+        public void ExportToCsv(string filePath) { }
+
+        public void ImportFromCsv(string filePath) { }
+
         /*
          * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
          * it was partially AI generated and I took inspiration from these sites:

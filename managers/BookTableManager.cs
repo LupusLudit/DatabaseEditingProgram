@@ -34,7 +34,8 @@ namespace DatabaseEditingProgram.managers
             }
             else
             {
-                MessageBox.Show("If creating a new book, there must be some genres and publishers in the database first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("If creating a new book, there must be some genres and publishers in the database first",
+                    "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -51,7 +52,7 @@ namespace DatabaseEditingProgram.managers
             DAO.Save(book);
         }
 
-        private void ReloadBooks()
+        protected override void Reload()
         {
             Items.Clear();
             var allBooks = DAO.GetAll();
@@ -60,6 +61,9 @@ namespace DatabaseEditingProgram.managers
                 Items.Add(book);
             }
         }
+        //Not implemented for this class
+        protected override void Import() { }
+        protected override void Export() { }
 
         /*
          * Note: this part of the code is NOT entirely mine (OnCollectionChanged)
@@ -68,9 +72,8 @@ namespace DatabaseEditingProgram.managers
 
         private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ReloadBooks();
+            Reload();
         }
-
 
     }
 }

@@ -13,20 +13,29 @@ namespace DatabaseEditingProgram.managers
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand AddCommand { get; }
+        public ICommand ImportCommand { get; }
+        public ICommand ExportCommand { get; }
+
 
         public TableManager(IDAO<T> dao)
         {
             DAO = dao;
             Items = new ObservableCollection<T>(dao.GetAll());
 
-            SaveCommand = new UniversalButtonCommand<T>(Save);
-            DeleteCommand = new UniversalButtonCommand<T>(Delete);
-            AddCommand = new AddButtonCommand(AddNew);
+            SaveCommand = new ArgumentButtonCommand<T>(Save);
+            DeleteCommand = new ArgumentButtonCommand<T>(Delete);
+            AddCommand = new UniversalButtonCommand(AddNew);
+            ImportCommand = new UniversalButtonCommand(Import);
+            ExportCommand = new UniversalButtonCommand(Export);
         }
 
         protected abstract void Save(T item);
         protected abstract void Delete(T item);
         protected abstract void AddNew();
+        protected abstract void Import();
+        protected abstract void Export();
+        protected abstract void Reload();
+
 
     }
 }

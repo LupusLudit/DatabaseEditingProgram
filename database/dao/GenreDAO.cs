@@ -1,5 +1,8 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
+using System.IO;
+using System.Text;
+using System.Windows;
 
 
 namespace DatabaseEditingProgram.database.dao
@@ -16,7 +19,7 @@ namespace DatabaseEditingProgram.database.dao
             SqlConnection conn = DatabaseSingleton.GetInstance();
             RemoveIncorrectFormat();
 
-            string createCustomerTable = @"
+            string createGenreTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'genre')
                 BEGIN
                     CREATE TABLE genre (
@@ -25,7 +28,7 @@ namespace DatabaseEditingProgram.database.dao
                     );
                 END";
 
-            using (SqlCommand command = new SqlCommand(createCustomerTable, conn))
+            using (SqlCommand command = new SqlCommand(createGenreTable, conn))
             {
                 command.ExecuteNonQuery();
             }
@@ -43,9 +46,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        //I have chosen a different approach here, since yield returning causes an issue when importing data to database
         public IEnumerable<Genre> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            List<Genre> genres = new List<Genre>();
 
             using (SqlCommand command = new SqlCommand("SELECT * FROM genre", conn))
             {
@@ -58,10 +63,11 @@ namespace DatabaseEditingProgram.database.dao
                              reader.GetString(1)
                             );
 
-                        yield return genre;
+                        genres.Add(genre);
                     }
                 }
             }
+            return genres;
         }
 
         public Genre? GetByID(int id)
@@ -105,6 +111,97 @@ namespace DatabaseEditingProgram.database.dao
                     command.Parameters.AddWithValue("@name", genre.Name);
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+
+        public void ExportToCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("SELECT id, name FROM genre", conn))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        // Header
+                        writer.WriteLine("id,name");
+
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.IsDBNull(1) ? "" : reader.GetString(1);
+
+                            writer.WriteLine($"{id},{name}");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ImportFromCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string? line;
+                    bool firstLine = true;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (firstLine)
+                        {
+                            firstLine = false;
+                            continue;
+                        }
+
+                        string[] values = line.Split(',');
+                        if (values.Length != 2) throw new FormatException("Incorrect CSV format");
+
+                        int id = int.Parse(values[0].Trim());
+                        string name = values[1].Trim();
+
+                        using (SqlCommand checkRecordExistenceCommand = new SqlCommand("SELECT COUNT(*) FROM genre WHERE id = @id", conn))
+                        {
+                            checkRecordExistenceCommand.Parameters.AddWithValue("@id", id);
+                            int count = (int)checkRecordExistenceCommand.ExecuteScalar();
+                            string query;
+
+                            if (count > 0)
+                            {
+                                query = @"UPDATE genre
+                                         SET name = @name
+                                         WHERE id = @id";
+
+                                using (SqlCommand updateCommand = new SqlCommand(query, conn))
+                                {
+                                    updateCommand.Parameters.AddWithValue("@id", id);
+                                    updateCommand.Parameters.AddWithValue("@name", name);
+                                    updateCommand.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                query = @"INSERT INTO genre
+                                        (name)
+                                        VALUES (@name)";
+
+                                using (SqlCommand insertCommand = new SqlCommand(query, conn))
+                                {
+                                    insertCommand.Parameters.AddWithValue("@name", name);
+                                    insertCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There has been an error while trying to import from a file. Exception: {ex.Message}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

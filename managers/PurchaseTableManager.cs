@@ -40,7 +40,8 @@ namespace DatabaseEditingProgram.managers
             }
             else
             {
-                MessageBox.Show("If creating a new purchase, there must be some customers and books (genres & publishers) in the database first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("If creating a new purchase, there must be some customers and books (genres & publishers) in the database first",
+                    "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -57,7 +58,7 @@ namespace DatabaseEditingProgram.managers
             DAO.Save(purchase);
         }
 
-        private void ReloadPurchases()
+        protected override void Reload()
         {
             Items.Clear();
             var allPurchases = DAO.GetAll();
@@ -67,6 +68,11 @@ namespace DatabaseEditingProgram.managers
             }
         }
 
+        //Not implemented for this class
+        protected override void Import() { }
+        protected override void Export() { }
+
+
         /*
          * Note: this part of the code is NOT entirely mine (OnCollectionChanged)
          * Inspiration: https://stackoverflow.com/questions/4588359/implementing-collectionchanged
@@ -74,8 +80,7 @@ namespace DatabaseEditingProgram.managers
 
         private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ReloadPurchases();
+            Reload();
         }
-
     }
 }

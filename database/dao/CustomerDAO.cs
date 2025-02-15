@@ -1,6 +1,9 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
+using System.IO;
 using System.Security.Policy;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DatabaseEditingProgram.database.dao
@@ -46,9 +49,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        //I have chosen a different approach here, since yield returning causes an issue when importing data to database
         public IEnumerable<Customer> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            List<Customer> customers = new List<Customer>();
 
             using (SqlCommand command = new SqlCommand("SELECT * FROM customer", conn))
             {
@@ -61,13 +66,14 @@ namespace DatabaseEditingProgram.database.dao
                             reader.GetString(1),
                             reader.GetString(2),
                             reader.GetDateTime(3)
-                            );
-
-                        yield return customer;
+                        );
+                        customers.Add(customer);
                     }
-                }
+                 }
             }
+            return customers;
         }
+
 
         public Customer? GetByID(int id)
         {
@@ -119,6 +125,106 @@ namespace DatabaseEditingProgram.database.dao
                 }
             }
         }
+
+        public void ExportToCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("SELECT id, name, surname, date_of_birth FROM customer", conn))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        // Header
+                        writer.WriteLine("id,name,surname,date_of_birth");
+
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                            string surname = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                            string dateOfBirth = reader.IsDBNull(3) ? "" : reader.GetDateTime(3).ToString("yyyy-MM-dd");
+
+                            writer.WriteLine($"{id},{name},{surname},{dateOfBirth}");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ImportFromCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string? line;
+                    bool firstLine = true;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (firstLine)
+                        {
+                            firstLine = false;
+                            continue;
+                        }
+
+                        string[] values = line.Split(',');
+                        if (values.Length != 4) throw new FormatException("Incorrect CSV format");
+
+                        int id = int.Parse(values[0].Trim());
+                        string name = values[1].Trim();
+                        string surname = values[2].Trim();
+                        DateTime dateOfBirth = DateTime.Parse(values[3].Trim());
+
+                        using (SqlCommand checkRecordExistenceCommand = new SqlCommand("SELECT COUNT(*) FROM customer WHERE id = @id", conn))
+                        {
+                            checkRecordExistenceCommand.Parameters.AddWithValue("@id", id);
+                            int count = (int)checkRecordExistenceCommand.ExecuteScalar();
+                            string query;
+
+                            if (count > 0)
+                            {
+                                query = @"UPDATE customer
+                                         SET name = @name, surname = @surname, date_of_birth = @date_of_birth
+                                         WHERE id = @id";
+
+                                using (SqlCommand updateCommand = new SqlCommand(query, conn))
+                                {
+                                    updateCommand.Parameters.AddWithValue("@id", id);
+                                    updateCommand.Parameters.AddWithValue("@name", name);
+                                    updateCommand.Parameters.AddWithValue("@surname", surname);
+                                    updateCommand.Parameters.AddWithValue("@date_of_birth", dateOfBirth);
+                                    updateCommand.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                query = @"INSERT INTO customer
+                                        (name, surname, date_of_birth)
+                                        VALUES (@name, @surname, @date_of_birth)";
+
+                                using (SqlCommand insertCommand = new SqlCommand(query, conn))
+                                {
+                                    insertCommand.Parameters.AddWithValue("@name", name);
+                                    insertCommand.Parameters.AddWithValue("@surname", surname);
+                                    insertCommand.Parameters.AddWithValue("@date_of_birth", dateOfBirth);
+                                    insertCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There has been an error while trying to import from a file. Exception: {ex.Message}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
         /*
          * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),

@@ -1,5 +1,8 @@
 ﻿using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Data.SqlClient;
+using System.IO;
+using System.Text;
+using System.Windows;
 
 namespace DatabaseEditingProgram.database.dao
 {
@@ -14,7 +17,7 @@ namespace DatabaseEditingProgram.database.dao
             SqlConnection conn = DatabaseSingleton.GetInstance();
             RemoveIncorrectFormat();
 
-            string createCustomerTable = @"
+            string createPublisherTable = @"
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'publisher')
                 BEGIN
                     CREATE TABLE publisher (
@@ -25,7 +28,7 @@ namespace DatabaseEditingProgram.database.dao
                     );
                 END";
 
-            using (SqlCommand command = new SqlCommand(createCustomerTable, conn))
+            using (SqlCommand command = new SqlCommand(createPublisherTable, conn))
             {
                 command.ExecuteNonQuery();
             }
@@ -43,9 +46,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        //I have chosen a different approach here, since yield returning causes an issue when importing data to database
         public IEnumerable<Publisher> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
+            List<Publisher> publishers = new List<Publisher>();
 
             using (SqlCommand command = new SqlCommand("SELECT * FROM publisher", conn))
             {
@@ -60,10 +65,11 @@ namespace DatabaseEditingProgram.database.dao
                             reader.GetBoolean(3)
                             );
 
-                        yield return publisher;
+                        publishers.Add(publisher);
                     }
                 }
             }
+            return publishers;
         }
 
         public Publisher? GetByID(int id)
@@ -113,6 +119,109 @@ namespace DatabaseEditingProgram.database.dao
                     command.Parameters.AddWithValue("@active", (publisher.IsActive ? 1 : 0));
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+        public void ExportToCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            using (SqlCommand command = new SqlCommand("SELECT id, name, motto, active FROM publisher", conn))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        // Header
+                        writer.WriteLine("id,name,motto,active");
+
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                            string motto = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                            bool active = reader.GetBoolean(3);
+
+                            writer.WriteLine($"{id},{name},{motto},{active}");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ImportFromCsv(string filePath)
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string? line;
+                    bool firstLine = true;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (firstLine)
+                        {
+                            firstLine = false;
+                            continue;
+                        }
+
+                        string[] values = line.Split(',');
+                        if (values.Length != 4) throw new FormatException("Incorrect CSV format");
+                        else if (!values[3].Trim().Equals("True", StringComparison.OrdinalIgnoreCase)
+                            && !values[3].Trim().Equals("False", StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new ArgumentException("File is missing a boolean value for IsActive");
+                        }
+
+                        int id = int.Parse(values[0].Trim());
+                        string name = values[1].Trim();
+                        string motto = values[2].Trim();
+                        bool active = values[3].Trim().Equals("True", StringComparison.OrdinalIgnoreCase);
+
+                        using (SqlCommand checkRecordExistenceCommand = new SqlCommand("SELECT COUNT(*) FROM publisher WHERE id = @id", conn))
+                        {
+                            checkRecordExistenceCommand.Parameters.AddWithValue("@id", id);
+                            int count = (int)checkRecordExistenceCommand.ExecuteScalar();
+                            string query;
+
+                            if (count > 0)
+                            {
+                                query = @"UPDATE publisher
+                                         SET name = @name, motto = @motto, active = @active
+                                         WHERE id = @id";
+
+                                using (SqlCommand updateCommand = new SqlCommand(query, conn))
+                                {
+                                    updateCommand.Parameters.AddWithValue("@id", id);
+                                    updateCommand.Parameters.AddWithValue("@name", name);
+                                    updateCommand.Parameters.AddWithValue("@motto", motto);
+                                    updateCommand.Parameters.AddWithValue("@active", active ? 1 : 0);
+                                    updateCommand.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                query = @"INSERT INTO publisher
+                                        (name, motto, active)
+                                        VALUES (@name, @motto, @active)";
+
+                                using (SqlCommand insertCommand = new SqlCommand(query, conn))
+                                {
+                                    insertCommand.Parameters.AddWithValue("@name", name);
+                                    insertCommand.Parameters.AddWithValue("@motto", motto);
+                                    insertCommand.Parameters.AddWithValue("@active", active ? 1 : 0);
+                                    insertCommand.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There has been an error while trying to import from a file. Exception: {ex.Message}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

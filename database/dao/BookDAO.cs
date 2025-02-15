@@ -160,7 +160,13 @@ namespace DatabaseEditingProgram.database.dao
                     command.ExecuteNonQuery();
                 }
             }
+        
         }
+
+        //Not implemented for this class
+        public void ExportToCsv(string filePath) { }
+
+        public void ImportFromCsv(string filePath) { }
 
         /*
          * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
@@ -252,6 +258,5 @@ namespace DatabaseEditingProgram.database.dao
                 command.ExecuteNonQuery();
             }
         }
-
     }
 }
