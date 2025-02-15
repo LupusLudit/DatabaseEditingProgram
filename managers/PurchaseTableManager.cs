@@ -14,8 +14,10 @@ namespace DatabaseEditingProgram.managers
         private ObservableCollection<Genre> loadedGenres;
         private ObservableCollection<Publisher> loadedPublishers;
 
-        public PurchaseTableManager(ObservableCollection<Customer> loadedCustomers, ObservableCollection<Book> loadedBooks,
-            ObservableCollection<Genre> loadedGenres, ObservableCollection<Publisher> loadedPublishers) : base(new PurchaseDAO())
+        public PurchaseTableManager(ObservableCollection<Customer> loadedCustomers,
+            ObservableCollection<Book> loadedBooks,
+            ObservableCollection<Genre> loadedGenres,
+            ObservableCollection<Publisher> loadedPublishers) : base(new PurchaseDAO())
         {
             this.loadedCustomers = loadedCustomers;
             this.loadedBooks = loadedBooks;

@@ -14,7 +14,9 @@ namespace DatabaseEditingProgram.database.dao
         IEnumerable<T> GetAll();
         void Save(T element);
         void Delete(T element);
+        bool ForbiddenTablesNotEmpty();
         void ExportToCsv(string filePath);
         void ImportFromCsv(string filePath);
+
     }
 }

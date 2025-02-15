@@ -15,7 +15,7 @@ namespace DatabaseEditingProgram.managers
         public ICommand AddCommand { get; }
         public ICommand ImportCommand { get; }
         public ICommand ExportCommand { get; }
-
+        public ICommand ReloadCommand { get;  }
 
         public TableManager(IDAO<T> dao)
         {
@@ -27,6 +27,7 @@ namespace DatabaseEditingProgram.managers
             AddCommand = new UniversalButtonCommand(AddNew);
             ImportCommand = new UniversalButtonCommand(Import);
             ExportCommand = new UniversalButtonCommand(Export);
+            ReloadCommand = new UniversalButtonCommand(Reload);
         }
 
         protected abstract void Save(T item);

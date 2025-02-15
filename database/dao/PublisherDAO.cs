@@ -63,7 +63,7 @@ namespace DatabaseEditingProgram.database.dao
                             reader.GetString(1),
                             reader.GetString(2),
                             reader.GetBoolean(3)
-                            );
+                        );
 
                         publishers.Add(publisher);
                     }
@@ -121,6 +121,24 @@ namespace DatabaseEditingProgram.database.dao
                 }
             }
         }
+
+        public bool ForbiddenTablesNotEmpty()
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            string checkEmptyTablesQuery = @"
+                SELECT 
+                    (SELECT COUNT(*) FROM book) + 
+                    (SELECT COUNT(*) FROM purchase)";
+
+            using (SqlCommand command = new SqlCommand(checkEmptyTablesQuery, conn))
+            {
+                int rowCount = (int)command.ExecuteScalar();
+                return rowCount > 0;
+            }
+        }
+
+
         public void ExportToCsv(string filePath)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -168,7 +186,8 @@ namespace DatabaseEditingProgram.database.dao
 
                         string[] values = line.Split(',');
                         if (values.Length != 4) throw new FormatException("Incorrect CSV format");
-                        else if (!values[3].Trim().Equals("True", StringComparison.OrdinalIgnoreCase)
+
+                        if (!values[3].Trim().Equals("True", StringComparison.OrdinalIgnoreCase)
                             && !values[3].Trim().Equals("False", StringComparison.OrdinalIgnoreCase))
                         {
                             throw new ArgumentException("File is missing a boolean value for IsActive");

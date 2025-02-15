@@ -183,6 +183,11 @@ namespace DatabaseEditingProgram.database.dao
 
         public void ImportFromCsv(string filePath) { }
 
+        public bool ForbiddenTablesNotEmpty()
+        {
+            return true;
+        }
+
         /*
          * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
          * it was partially AI generated and I took inspiration from these sites:

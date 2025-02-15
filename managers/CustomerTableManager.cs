@@ -1,6 +1,7 @@
 ﻿using DatabaseEditingProgram.database.dao;
 using DatabaseEditingProgram.database.databaseEntities;
 using Microsoft.Win32;
+using System.Windows;
 
 namespace DatabaseEditingProgram.managers
 {
@@ -40,6 +41,12 @@ namespace DatabaseEditingProgram.managers
 
         protected override void Import()
         {
+            if (DAO.ForbiddenTablesNotEmpty())
+            {
+                MessageBox.Show("Import is not allowed because the book table or the purchase table is not empty", "Import Blocked", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "CSV files (*.csv)|*.csv",

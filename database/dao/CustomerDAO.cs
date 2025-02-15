@@ -126,6 +126,24 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        public bool ForbiddenTablesNotEmpty()
+        {
+            SqlConnection conn = DatabaseSingleton.GetInstance();
+
+            string checkEmptyTablesQuery = @"
+                SELECT 
+                    (SELECT COUNT(*) FROM book) + 
+                    (SELECT COUNT(*) FROM purchase)";
+
+            using (SqlCommand command = new SqlCommand(checkEmptyTablesQuery, conn))
+            {
+                int rowCount = (int)command.ExecuteScalar();
+                return rowCount > 0;
+            }
+        }
+
+
+
         public void ExportToCsv(string filePath)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

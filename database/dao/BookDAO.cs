@@ -167,6 +167,11 @@ namespace DatabaseEditingProgram.database.dao
         public void ExportToCsv(string filePath) { }
 
         public void ImportFromCsv(string filePath) { }
+        public bool ForbiddenTablesNotEmpty()
+        {
+            return true;
+        }
+
 
         /*
          * Note: this part of the code is NOT entirely mine (RemoveIncorrectFormat),
@@ -258,5 +263,6 @@ namespace DatabaseEditingProgram.database.dao
                 command.ExecuteNonQuery();
             }
         }
+
     }
 }

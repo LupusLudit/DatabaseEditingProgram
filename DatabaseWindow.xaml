@@ -128,8 +128,13 @@
                         </ScrollViewer>
 
                         <Border Grid.Row="2" Background="LightGray">
-                            <Button Content="Add New" Command="{Binding DataContext.PurchaseManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                  Margin="2" HorizontalAlignment="Center" Height="20"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                                <Button Content="Add New" Command="{Binding DataContext.PurchaseManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        Height="20" Margin="5,0,50,0"/>
+
+                                <Button Content="Refresh" Command="{Binding DataContext.PurchaseManager.ReloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                         Height="20" Margin="5,0,5,0"/>
+                            </StackPanel>
                         </Border>
                     </Grid>
                 </Border>
