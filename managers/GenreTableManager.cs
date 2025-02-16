@@ -11,10 +11,19 @@ namespace DatabaseEditingProgram.managers
 
         protected override void AddNew()
         {
-            Genre genre = new Genre("New Genre");
-            DAO.Save(genre);
-            Items.Add(genre);
+            try
+            {
+                Genre genre = new Genre("New Genre");
+                DAO.Save(genre);
+                Items.Add(genre);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+
 
         protected override void Delete(Genre genre)
         {

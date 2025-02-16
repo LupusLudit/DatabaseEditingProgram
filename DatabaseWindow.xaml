@@ -108,7 +108,7 @@
                                     </DataGridTemplateColumn>
 
                                     <DataGridTextColumn Header="Surcharge" Binding="{Binding Surcharge}"/>
-                                    
+
                                     <DataGridTextColumn Header="Final Price" Binding="{Binding Price}" IsReadOnly="True"/>
 
                                     <DataGridTemplateColumn Header="Actions">
@@ -408,7 +408,7 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </ScrollViewer>
-                        
+
                         <Border Grid.Row="2" Background="LightGray">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                                 <Button Content="Add New" Command="{Binding DataContext.GenreManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -428,12 +428,6 @@
 
             </Grid>
         </Grid>
-
-        <Button x:Name="ImportButton" Content="Import from file" HorizontalAlignment="Left" Grid.Row="2"
-                Width="120" Height="25" Click="ImportButton_Click" Margin="50,20,0,0"/>
-
-        <Button x:Name="ExportButton" Content="Export to file" HorizontalAlignment="Left" Grid.Row="2"
-        Width="120" Height="25" Click="ExportButton_Click" Margin="220,20,0,0"/>
 
         <Button x:Name="DisconnectButton" Content="Disconnect" HorizontalAlignment="Right" Grid.Row="2"
         Width="90" Height="25" Click="DisconnectButton_Click" Margin="0,20,50,0"/>

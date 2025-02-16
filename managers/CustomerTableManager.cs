@@ -11,9 +11,17 @@ namespace DatabaseEditingProgram.managers
 
         protected override void AddNew()
         {
-            Customer customer = new Customer("New", "Customer", DateTime.Today);
-            DAO.Save(customer);
-            Items.Add(customer);
+            try
+            {
+                Customer customer = new Customer("New", "Customer", DateTime.Today);
+                DAO.Save(customer);
+                Items.Add(customer);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         protected override void Delete(Customer customer)

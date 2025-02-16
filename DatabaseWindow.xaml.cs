@@ -12,9 +12,6 @@ namespace DatabaseEditingProgram
             this.databaseName = databaseName;
             TitleLabel.Content = $"Connected to database \"{databaseName}\"";
         }
-
-        private void ImportButton_Click(object sender, RoutedEventArgs e) { }
-        private void ExportButton_Click(object sender, RoutedEventArgs e) { }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             DatabaseSingleton.CloseConnection();

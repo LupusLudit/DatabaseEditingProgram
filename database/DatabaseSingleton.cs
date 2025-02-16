@@ -22,10 +22,13 @@ namespace DatabaseEditingProgram.database
                 consStringBuilder.DataSource = ReadSetting("DataSource");
                 consStringBuilder.ConnectTimeout = 30;
                 consStringBuilder.TrustServerCertificate = true;
+                consStringBuilder.MultipleActiveResultSets = true;
 
                 conn = new SqlConnection(consStringBuilder.ConnectionString);
-                Console.WriteLine(consStringBuilder.ConnectionString);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open)
+                {
+                    conn.Open();
+                }
             }
             return conn;
         }

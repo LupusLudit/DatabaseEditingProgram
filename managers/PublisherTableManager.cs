@@ -11,9 +11,17 @@ namespace DatabaseEditingProgram.managers
 
         protected override void AddNew()
         {
-            Publisher publisher = new Publisher("New Publisher", "New Motto", false);
-            DAO.Save(publisher);
-            Items.Add(publisher);
+            try
+            {
+                Publisher publisher = new Publisher("New Publisher", "New Motto", false);
+                DAO.Save(publisher);
+                Items.Add(publisher);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         protected override void Delete(Publisher publisher)
