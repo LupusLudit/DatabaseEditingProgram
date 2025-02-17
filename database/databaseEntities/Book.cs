@@ -1,5 +1,6 @@
 ﻿namespace DatabaseEditingProgram.database.databaseEntities
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="Book"]/*'/>
     public class Book: IDatabaseEntity
     {
         private int id;

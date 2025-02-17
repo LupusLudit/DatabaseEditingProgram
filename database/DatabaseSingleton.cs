@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseEditingProgram.database
 {
+    /// <include file='../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="DatabaseSingleton"]/*'/>
     public class DatabaseSingleton
     {
         private static SqlConnection? conn = null;
@@ -25,7 +26,10 @@ namespace DatabaseEditingProgram.database
                 consStringBuilder.MultipleActiveResultSets = true;
 
                 conn = new SqlConnection(consStringBuilder.ConnectionString);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open)
+                {
+                    conn.Open();
+                }
             }
             return conn;
         }

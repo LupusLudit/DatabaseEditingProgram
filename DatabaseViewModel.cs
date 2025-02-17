@@ -5,7 +5,8 @@ using System.Collections.ObjectModel;
 
 namespace DatabaseEditingProgram
 {
-    class DatabaseViewModel
+    /// <include file='docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="DatabaseViewModel"]/*'/>
+    public class DatabaseViewModel
     {
         public GenreTableManager GenreManager { get; }
         public PublisherTableManager PublisherManager { get; }

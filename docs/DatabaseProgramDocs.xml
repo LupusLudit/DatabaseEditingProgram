@@ -1,0 +1,151 @@
+﻿<MyDocs>
+	<MyMembers name="ArgumentButtonCommand">
+		<summary>
+			Implementation of the ICommand interface that allows passing an argument of type T (Database entity).
+			It is used to handle commands from TableManger.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="UniversalButtonCommand">
+		<summary>
+			Implementation of the ICommand interface. Needs no argument.
+			It is used to handle commands from TableManger.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="BookDAO">
+		<summary>
+			Implementation of the IDAO interface. Expects Book as an argument.
+			It is used to handle server side book table editing.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="CustomerDAO">
+		<summary>
+			Implementation of the IDAO interface. Expects Customer as an argument.
+			It is used to handle server side customer table editing.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="GenreDAO">
+		<summary>
+			Implementation of the IDAO interface. Expects Genre as an argument.
+			It is used to handle server side genre table editing.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="PublisherDAO">
+		<summary>
+			Implementation of the IDAO interface. Expects Publisher as an argument.
+			It is used to handle server side publisher table editing.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="PurchaseDAO">
+		<summary>
+			Implementation of the IDAO interface. Expects Purchase as an argument.
+			It is used to handle server side purchase table editing.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="IDAO">
+		<summary>
+			Generic Data Access Object interface for database entities. Expects argument of type T (Database entity).
+			It is implemented in all DAO objects.
+		</summary>
+	</MyMembers>
+	
+	<MyMembers name="Book">
+		<summary>
+			Class representing a book in the program.
+			The book contains id, title, isSigned (bool), price and its linked to the Genre and Publisher classes.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="Customer">
+		<summary>
+			Class representing a customer in the program.
+			The book customer id, name, surname and dateOfBirth (DateTime).
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="Genre">
+		<summary>
+			Class representing a genre in the program.
+			The book genre id, and a name.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="Publisher">
+		<summary>
+			Class representing a publisher in the program.
+			The book publisher id, name, motto and isActive (bool).
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="Purchase">
+		<summary>
+			Class representing a purchase in the program.
+			The purchase contains id, surcharge, final price, date (DateTime), time (TimeSpan) and its linked to the Book and Customer classes.
+		</summary>
+	</MyMembers>
+	
+	<MyMembers name="IDatabaseEntity">
+		<summary>
+			Generic DatabaseEntity interface for all database entities.
+			It contains only id. All database entities have to implenet this interface and therfor they have to contain id.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="DatabaseSingleton">
+		<summary>
+			Class handeling connection to the database.
+			It loads data from a configuration file.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="TableManager">
+		<summary>
+			Abstract class for all TableManagers.
+			It connects the frontend tables with DAOs.
+			It contains commands which can be called in the DatabaseWindow.xaml.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="BookTableManager">
+		<summary>
+			Manages connecting frontend book table with its DAO class by using implemented command methods.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="CustomerTableManager">
+		<summary>
+			Manages connecting frontend customer table with its DAO class by using implemented command methods.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="GenreTableManager">
+		<summary>
+			Manages connecting frontend genre table with its DAO class by using implemented command methods.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="PublisherTableManager">
+		<summary>
+			Manages connecting frontend publisher table with its DAO class by using implemented command methods.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="PurchaseTableManager">
+		<summary>
+			Manages connecting frontend purchase table with its DAO class by using implemented command methods.
+		</summary>
+	</MyMembers>
+
+	<MyMembers name="DatabaseViewModel">
+		<summary>
+			Class implemeting all TableManagers and their Items.
+			DatabaseViewModel uses this class to actually connect with all the TableManagers and interact with the database.
+		</summary>
+	</MyMembers>
+</MyDocs>

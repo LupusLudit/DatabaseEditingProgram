@@ -2,16 +2,22 @@
 using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace DatabaseEditingProgram.database.dao
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="PublisherDAO"]/*'/>
     public class PublisherDAO : IDAO<Publisher>
     {
         public PublisherDAO()
         {
             CreateTable();
         }
+
+        /// <summary>
+        /// Creates the publisher table if it does not exist.
+        /// </summary>
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -34,6 +40,10 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        /// <summary>
+        /// Deletes a publisher from the database.
+        /// </summary>
+        /// <param name="publisher">The publisher to delete.</param>
         public void Delete(Publisher publisher)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -47,6 +57,10 @@ namespace DatabaseEditingProgram.database.dao
         }
 
         //I have chosen a different approach here, since yield returning causes an issue when importing data to database
+        /// <summary>
+        /// Retrieves all publishers from the database.
+        /// </summary>
+        /// <returns>A collection of publishers.</returns>
         public IEnumerable<Publisher> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -72,6 +86,11 @@ namespace DatabaseEditingProgram.database.dao
             return publishers;
         }
 
+        /// <summary>
+        /// Retrieves a publisher based on its ID.
+        /// </summary>
+        /// <param name="id">The publisher ID.</param>
+        /// <returns>The publisher if found (otherwise null).</returns>
         public Publisher? GetByID(int id)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -95,6 +114,10 @@ namespace DatabaseEditingProgram.database.dao
             return null;
         }
 
+        /// <summary>
+        /// Saves a publisher to the database. If the publisher does not exist, it is inserted. If it does, it is updated.
+        /// </summary>
+        /// <param name="publisher">The publisher to save.</param>
         public void Save(Publisher publisher)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -122,6 +145,10 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        /// <summary>
+        /// Checks if forbidden tables contain any records.
+        /// </summary>
+        /// <returns>True if forbidden tables are not empty (otherwise false).</returns>
         public bool ForbiddenTablesNotEmpty()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -138,34 +165,55 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-
+        /// <summary>
+        /// Exports the publisher data to a CSV file.
+        /// </summary>
+        /// <param name="filePath">The file path to save the CSV.</param>
+        /// <exception cref="ArgumentException">Is thrown when exported data contain commas.</exception>
         public void ExportToCsv(string filePath)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
-
-            using (SqlCommand command = new SqlCommand("SELECT id, name, motto, active FROM publisher", conn))
+            string commaPattern = @",.*|.*,";
+            Regex regex = new Regex(commaPattern);
+            try
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlCommand command = new SqlCommand("SELECT id, name, motto, active FROM publisher", conn))
                 {
-                    using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        // Header
-                        writer.WriteLine("id,name,motto,active");
-
-                        while (reader.Read())
+                        using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
                         {
-                            int id = reader.GetInt32(0);
-                            string name = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                            string motto = reader.IsDBNull(2) ? "" : reader.GetString(2);
-                            bool active = reader.GetBoolean(3);
+                            // Header
+                            writer.WriteLine("id,name,motto,active");
 
-                            writer.WriteLine($"{id},{name},{motto},{active}");
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                string name = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                                string motto = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                                bool active = reader.GetBoolean(3);
+                                if (regex.IsMatch(name) || regex.IsMatch(motto))
+                                {
+                                    throw new ArgumentException("When exporting data, no text fields must contain a comma");
+                                }
+                                else writer.WriteLine($"{id},{name},{motto},{active}");
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+        /// <summary>
+        /// Imports the publisher data from a CSV file.
+        /// </summary>
+        /// <param name="filePath">The file path to load the CSV.</param>
+        /// <exception cref="FormatException">Is thrown when the CSV file being imported does not meet necessary requirements.</exception>
         public void ImportFromCsv(string filePath)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -251,6 +299,12 @@ namespace DatabaseEditingProgram.database.dao
          * Inspiration: https://database.guide/understanding-information_schema-in-sql/
          * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
          */
+
+        /// <summary>
+        /// Ensures the publisher table follows the expected schema. If it does not, the table gets deleted.
+        /// Serves as a security check - if there is already a table with the name "publisher" that does not fit
+        /// our schema and we do not drop it, it might cause some issues.
+        /// </summary>
         public void RemoveIncorrectFormat()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

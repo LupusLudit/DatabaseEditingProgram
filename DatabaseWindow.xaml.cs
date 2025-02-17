@@ -4,6 +4,9 @@ using DatabaseEditingProgram.database;
 
 namespace DatabaseEditingProgram
 {
+    /// <summary>
+    /// Interaction logic for DatabaseWindow.xaml
+    /// </summary>
     public partial class DatabaseWindow : Window
     {
         private string databaseName;

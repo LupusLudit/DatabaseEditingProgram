@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseEditingProgram.database.dao
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="PurchaseDAO"]/*'/>
     public class PurchaseDAO : IDAO<Purchase>
     {
         public PurchaseDAO()
@@ -10,6 +11,9 @@ namespace DatabaseEditingProgram.database.dao
             CreateTable();
         }
 
+        /// <summary>
+        /// Creates the purchase table if it does not exist.
+        /// </summary>
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -35,7 +39,10 @@ namespace DatabaseEditingProgram.database.dao
                 command.ExecuteNonQuery();
             }
         }
-
+        /// <summary>
+        /// Deletes a purchase from the database.
+        /// </summary>
+        /// <param name="purchase">The purchase to delete.</param>
         public void Delete(Purchase purchase)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -48,6 +55,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+
+        /// <summary>
+        /// Retrieves all purchases from the database.
+        /// </summary>
+        /// <returns>A collection of purchases.</returns>
         public IEnumerable<Purchase> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -90,6 +102,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        /// <summary>
+        /// Retrieves a purchase based on its ID.
+        /// </summary>
+        /// <param name="id">The purchase ID.</param>
+        /// <returns>The purchase if found (otherwise null).</returns>
         public Purchase? GetByID(int id)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -134,7 +151,10 @@ namespace DatabaseEditingProgram.database.dao
             return null;
         }
 
-
+        /// <summary>
+        /// Saves a purchase to the database. If the purchase does not exist, it is inserted. If it does, it is updated.
+        /// </summary>
+        /// <param name="purchase">The purchase to save.</param>
         public void Save(Purchase purchase)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -178,11 +198,12 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-        //Not implemented for this class
+        /*
+         * Not implemented for this class.
+         * Their existence, however, proofs possible implementation for all DAO classes.
+         */
         public void ExportToCsv(string filePath) { }
-
         public void ImportFromCsv(string filePath) { }
-
         public bool ForbiddenTablesNotEmpty()
         {
             return true;
@@ -195,6 +216,12 @@ namespace DatabaseEditingProgram.database.dao
          * Inspiration: https://database.guide/understanding-information_schema-in-sql/
          * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
          */
+
+        /// <summary>
+        /// Ensures the purchase table follows the expected schema. If it does not, the table gets deleted.
+        /// Serves as a security check - if there is already a table with the name "purchase" that does not fit
+        /// our schema and we do not drop it, it might cause some issues.
+        /// </summary>
         public void RemoveIncorrectFormat()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

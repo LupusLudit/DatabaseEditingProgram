@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 namespace DatabaseEditingProgram.database.dao
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="BookDAO"]/*'/>
     public class BookDAO : IDAO<Book>
     {
         public BookDAO()
@@ -9,6 +10,9 @@ namespace DatabaseEditingProgram.database.dao
             CreateTable();
         }
 
+        /// <summary>
+        /// Creates the book table if it does not exist.
+        /// </summary>
         public void CreateTable()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -35,6 +39,10 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        /// <summary>
+        /// Deletes a book from the database.
+        /// </summary>
+        /// <param name="book">The book to delete.</param>
         public void Delete(Book book)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -47,6 +55,10 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
+        /// <summary>
+        /// Retrieves all books from the database.
+        /// </summary>
+        /// <returns>A collection of books.</returns>
         public IEnumerable<Book> GetAll()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -81,7 +93,11 @@ namespace DatabaseEditingProgram.database.dao
             }
         }
 
-
+        /// <summary>
+        /// Retrieves a book based on its ID.
+        /// </summary>
+        /// <param name="id">The book ID.</param>
+        /// <returns>The book if found (otherwise null).</returns>
         public Book? GetByID(int id)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
@@ -119,11 +135,15 @@ namespace DatabaseEditingProgram.database.dao
             return null;
         }
 
-        public void Save(Book element)
+        /// <summary>
+        /// Saves a book to the database. If the book does not exist, it is inserted. If it does, it is updated.
+        /// </summary>
+        /// <param name="book">The book to save.</param>
+        public void Save(Book book)
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();
 
-            if (element.ID == 0)
+            if (book.ID == 0)
             {
                 string insertBookQuery = @"
                 INSERT INTO book (title, is_signed, price, genre_id, publisher_id)
@@ -132,13 +152,13 @@ namespace DatabaseEditingProgram.database.dao
 
                 using (SqlCommand command = new SqlCommand(insertBookQuery, conn))
                 {
-                    command.Parameters.AddWithValue("@title", element.Title);
-                    command.Parameters.AddWithValue("@is_signed", element.IsSigned);
-                    command.Parameters.AddWithValue("@price", element.Price);
-                    command.Parameters.AddWithValue("@genre_id", element.Genre.ID);
-                    command.Parameters.AddWithValue("@publisher_id", element.Publisher.ID);
+                    command.Parameters.AddWithValue("@title", book.Title);
+                    command.Parameters.AddWithValue("@is_signed", book.IsSigned);
+                    command.Parameters.AddWithValue("@price", book.Price);
+                    command.Parameters.AddWithValue("@genre_id", book.Genre.ID);
+                    command.Parameters.AddWithValue("@publisher_id", book.Publisher.ID);
 
-                    element.ID = Convert.ToInt32(command.ExecuteScalar());
+                    book.ID = Convert.ToInt32(command.ExecuteScalar());
                 }
             }
             else
@@ -150,12 +170,12 @@ namespace DatabaseEditingProgram.database.dao
 
                 using (SqlCommand command = new SqlCommand(updateBookQuery, conn))
                 {
-                    command.Parameters.AddWithValue("@id", element.ID);
-                    command.Parameters.AddWithValue("@title", element.Title);
-                    command.Parameters.AddWithValue("@is_signed", element.IsSigned);
-                    command.Parameters.AddWithValue("@price", element.Price);
-                    command.Parameters.AddWithValue("@genre_id", element.Genre.ID);
-                    command.Parameters.AddWithValue("@publisher_id", element.Publisher.ID);
+                    command.Parameters.AddWithValue("@id", book.ID);
+                    command.Parameters.AddWithValue("@title", book.Title);
+                    command.Parameters.AddWithValue("@is_signed", book.IsSigned);
+                    command.Parameters.AddWithValue("@price", book.Price);
+                    command.Parameters.AddWithValue("@genre_id", book.Genre.ID);
+                    command.Parameters.AddWithValue("@publisher_id", book.Publisher.ID);
 
                     command.ExecuteNonQuery();
                 }
@@ -163,9 +183,11 @@ namespace DatabaseEditingProgram.database.dao
         
         }
 
-        //Not implemented for this class
+        /*
+         * Not implemented for this class.
+         * Their existence, however, proofs possible implementation for all DAO classes.
+         */
         public void ExportToCsv(string filePath) { }
-
         public void ImportFromCsv(string filePath) { }
         public bool ForbiddenTablesNotEmpty()
         {
@@ -181,6 +203,11 @@ namespace DatabaseEditingProgram.database.dao
          * Inspiration: https://www.geeksforgeeks.org/how-to-use-information_schema-views-in-sql-server/
          */
 
+        /// <summary>
+        /// Ensures the book table follows the expected schema. If it does not, the table gets deleted.
+        /// Serves as a security check - if there is already a table with the name "book" that does not fit
+        /// our schema and we do not drop it, it might cause some issues.
+        /// </summary>
         public void RemoveIncorrectFormat()
         {
             SqlConnection conn = DatabaseSingleton.GetInstance();

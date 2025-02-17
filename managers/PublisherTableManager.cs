@@ -5,6 +5,7 @@ using System.Windows;
 
 namespace DatabaseEditingProgram.managers
 {
+    /// <include file='../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="PublisherTableManager"]/*'/>
     public class PublisherTableManager : TableManager<Publisher>
     {
         public PublisherTableManager() : base(new PublisherDAO()) { }

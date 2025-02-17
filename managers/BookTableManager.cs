@@ -7,11 +7,20 @@ using System.Windows;
 
 namespace DatabaseEditingProgram.managers
 {
+    /// <include file='../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="BookTableManager"]/*'/>
     public class BookTableManager : TableManager<Book>
     {
         private ObservableCollection<Genre> loadedGenres;
         private ObservableCollection<Publisher> loadedPublishers;
 
+        /// <summary>
+        /// BookTableManager constructor.
+        /// Assigns values to the implemented collections and adds OnCollectionChanged methods to them.
+        /// By doing that we make sure that whenever an item is deleted from one of these collections (which are bound to the book)
+        /// the book reloads.
+        /// </summary>
+        /// <param name="loadedGenres"></param>
+        /// <param name="loadedPublishers"></param>
         public BookTableManager(ObservableCollection<Genre> loadedGenres, ObservableCollection<Publisher> loadedPublishers)
             : base(new BookDAO())
         {
@@ -38,7 +47,12 @@ namespace DatabaseEditingProgram.managers
                     "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-        //Not implemented for this class
+
+        /*
+         * Not implemented for this class.
+         * I kept the Import and Export functions as protected abstract voids in the abstract class to
+         * proof possible implementation in all classes.
+         */
         protected override void Import() { }
         protected override void Export() { }
 

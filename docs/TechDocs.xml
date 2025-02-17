@@ -1,0 +1,522 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DatabaseEditingProgram</name>
+    </assembly>
+    <members>
+        <member name="T:DatabaseEditingProgram.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.ArgumentButtonCommand`1">
+            <summary>
+			Implementation of the ICommand interface that allows passing an argument of type T (Database entity).
+			It is used to handle commands from TableManger.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.ArgumentButtonCommand`1.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">The command parameter (expected to be of type T).</param>
+            <returns>True if the command can execute (otherwise false)</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.ArgumentButtonCommand`1.Execute(System.Object)">
+            <summary>
+            Executes the command action (_execute).
+            </summary>
+            <param name="parameter">The command parameter (expected to be of type T).</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.ArgumentButtonCommand`1.RaiseCanExecuteChanged">
+            <summary>
+            Implemented ICommand function, notifies the CanExecuteChanged
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.commands.UniversalButtonCommand">
+            <summary>
+			Implementation of the ICommand interface. Needs no argument.
+			It is used to handle commands from TableManger.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.commands.UniversalButtonCommand.CanExecute(System.Object)">
+            <summary>
+            Determines whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">The command parameter.</param>
+            <returns>True if the command can execute (otherwise false)</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.commands.UniversalButtonCommand.Execute(System.Object)">
+            <summary>
+            Executes the command action (_execute).
+            </summary>
+            <param name="parameter">The command parameter.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.commands.UniversalButtonCommand.RaiseCanExecuteChanged">
+            <summary>
+            Implemented ICommand function, notifies the CanExecuteChanged
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.DatabaseViewModel">
+            <summary>
+			Class implemeting all TableManagers and their Items.
+			DatabaseViewModel uses this class to actually connect with all the TableManagers and interact with the database.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.DatabaseWindow">
+            <summary>
+            Interaction logic for DatabaseWindow.xaml
+            </summary>
+            <summary>
+            DatabaseWindow
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.DatabaseWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.BookDAO">
+            <summary>
+			Implementation of the IDAO interface. Expects Book as an argument.
+			It is used to handle server side book table editing.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.CreateTable">
+            <summary>
+            Creates the book table if it does not exist.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.Delete(DatabaseEditingProgram.database.databaseEntities.Book)">
+            <summary>
+            Deletes a book from the database.
+            </summary>
+            <param name="book">The book to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.GetAll">
+            <summary>
+            Retrieves all books from the database.
+            </summary>
+            <returns>A collection of books.</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.GetByID(System.Int32)">
+            <summary>
+            Retrieves a book based on its ID.
+            </summary>
+            <param name="id">The book ID.</param>
+            <returns>The book if found (otherwise null).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.Save(DatabaseEditingProgram.database.databaseEntities.Book)">
+            <summary>
+            Saves a book to the database. If the book does not exist, it is inserted. If it does, it is updated.
+            </summary>
+            <param name="book">The book to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.BookDAO.RemoveIncorrectFormat">
+            <summary>
+            Ensures the book table follows the expected schema. If it does not, the table gets deleted.
+            Serves as a security check - if there is already a table with the name "book" that does not fit
+            our schema and we do not drop it, it might cause some issues.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.CustomerDAO">
+            <summary>
+			Implementation of the IDAO interface. Expects Customer as an argument.
+			It is used to handle server side customer table editing.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.CreateTable">
+            <summary>
+            Creates the customer table if it does not exist.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.Delete(DatabaseEditingProgram.database.databaseEntities.Customer)">
+            <summary>
+            Deletes a customer from the database.
+            </summary>
+            <param name="customer">The customer to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.GetAll">
+            <summary>
+            Retrieves all customers from the database.
+            </summary>
+            <returns>A collection of customers.</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.GetByID(System.Int32)">
+            <summary>
+            Retrieves a customer based on its ID.
+            </summary>
+            <param name="id">The customer ID.</param>
+            <returns>The customer if found (otherwise null).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.Save(DatabaseEditingProgram.database.databaseEntities.Customer)">
+            <summary>
+            Saves a customer to the database. If the customer does not exist, it is inserted. If it does, it is updated.
+            </summary>
+            <param name="customer">The book to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.ForbiddenTablesNotEmpty">
+            <summary>
+            Checks if forbidden tables contain any records.
+            </summary>
+            <returns>True if forbidden tables are not empty (otherwise false).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.ExportToCsv(System.String)">
+            <summary>
+            Exports the customer data to a CSV file.
+            </summary>
+            <param name="filePath">The file path to save the CSV.</param>
+            <exception cref="T:System.ArgumentException">Is thrown when exported data contain commas.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.ImportFromCsv(System.String)">
+            <summary>
+            Imports the customer data from a CSV file.
+            </summary>
+            <param name="filePath">The file path to load the CSV.</param>
+            <exception cref="T:System.FormatException">Is thrown when the CSV file being imported does not meet necessary requirements.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.CustomerDAO.RemoveIncorrectFormat">
+            <summary>
+            Ensures the customer table follows the expected schema. If it does not, the table gets deleted.
+            Serves as a security check - if there is already a table with the name "customer" that does not fit
+            our schema and we do not drop it, it might cause some issues.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.GenreDAO">
+            <summary>
+			Implementation of the IDAO interface. Expects Genre as an argument.
+			It is used to handle server side genre table editing.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.CreateTable">
+            <summary>
+            Creates the genre table if it does not exist.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.Delete(DatabaseEditingProgram.database.databaseEntities.Genre)">
+            <summary>
+            Deletes a genre from the database.
+            </summary>
+            <param name="genre">The genre to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.GetAll">
+            <summary>
+            Retrieves all genres from the database.
+            </summary>
+            <returns>A collection of genres.</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.GetByID(System.Int32)">
+            <summary>
+            Retrieves a genre based on its ID.
+            </summary>
+            <param name="id">The genre ID.</param>
+            <returns>The genre if found (otherwise null).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.Save(DatabaseEditingProgram.database.databaseEntities.Genre)">
+            <summary>
+            Saves a genre to the database. If the genre does not exist, it is inserted. If it does, it is updated.
+            </summary>
+            <param name="genre">The genre to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.ForbiddenTablesNotEmpty">
+            <summary>
+            Checks if forbidden tables contain any records.
+            </summary>
+            <returns>True if forbidden tables are not empty (otherwise false).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.ExportToCsv(System.String)">
+            <summary>
+            Exports the genre data to a CSV file.
+            </summary>
+            <param name="filePath">The file path to save the CSV.</param>
+            <exception cref="T:System.ArgumentException">Is thrown when exported data contain commas.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.ImportFromCsv(System.String)">
+            <summary>
+            Imports the genre data from a CSV file.
+            </summary>
+            <param name="filePath">The file path to load the CSV.</param>
+            <exception cref="T:System.FormatException">Is thrown when the CSV file being imported does not meet necessary requirements.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.GenreDAO.RemoveIncorrectFormat">
+            <summary>
+            Ensures the genre table follows the expected schema. If it does not, the table gets deleted.
+            Serves as a security check - if there is already a table with the name "genre" that does not fit
+            our schema and we do not drop it, it might cause some issues.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.IDAO`1">
+            <summary>
+			Generic Data Access Object interface for database entities. Expects argument of type T (Database entity).
+			It is implemented in all DAO objects.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.PublisherDAO">
+            <summary>
+			Implementation of the IDAO interface. Expects Publisher as an argument.
+			It is used to handle server side publisher table editing.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.CreateTable">
+            <summary>
+            Creates the publisher table if it does not exist.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.Delete(DatabaseEditingProgram.database.databaseEntities.Publisher)">
+            <summary>
+            Deletes a publisher from the database.
+            </summary>
+            <param name="publisher">The publisher to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.GetAll">
+            <summary>
+            Retrieves all publishers from the database.
+            </summary>
+            <returns>A collection of publishers.</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.GetByID(System.Int32)">
+            <summary>
+            Retrieves a publisher based on its ID.
+            </summary>
+            <param name="id">The publisher ID.</param>
+            <returns>The publisher if found (otherwise null).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.Save(DatabaseEditingProgram.database.databaseEntities.Publisher)">
+            <summary>
+            Saves a publisher to the database. If the publisher does not exist, it is inserted. If it does, it is updated.
+            </summary>
+            <param name="publisher">The publisher to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.ForbiddenTablesNotEmpty">
+            <summary>
+            Checks if forbidden tables contain any records.
+            </summary>
+            <returns>True if forbidden tables are not empty (otherwise false).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.ExportToCsv(System.String)">
+            <summary>
+            Exports the publisher data to a CSV file.
+            </summary>
+            <param name="filePath">The file path to save the CSV.</param>
+            <exception cref="T:System.ArgumentException">Is thrown when exported data contain commas.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.ImportFromCsv(System.String)">
+            <summary>
+            Imports the publisher data from a CSV file.
+            </summary>
+            <param name="filePath">The file path to load the CSV.</param>
+            <exception cref="T:System.FormatException">Is thrown when the CSV file being imported does not meet necessary requirements.</exception>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PublisherDAO.RemoveIncorrectFormat">
+            <summary>
+            Ensures the publisher table follows the expected schema. If it does not, the table gets deleted.
+            Serves as a security check - if there is already a table with the name "publisher" that does not fit
+            our schema and we do not drop it, it might cause some issues.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.dao.PurchaseDAO">
+            <summary>
+			Implementation of the IDAO interface. Expects Purchase as an argument.
+			It is used to handle server side purchase table editing.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.CreateTable">
+            <summary>
+            Creates the purchase table if it does not exist.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.Delete(DatabaseEditingProgram.database.databaseEntities.Purchase)">
+            <summary>
+            Deletes a purchase from the database.
+            </summary>
+            <param name="purchase">The purchase to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.GetAll">
+            <summary>
+            Retrieves all purchases from the database.
+            </summary>
+            <returns>A collection of purchases.</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.GetByID(System.Int32)">
+            <summary>
+            Retrieves a purchase based on its ID.
+            </summary>
+            <param name="id">The purchase ID.</param>
+            <returns>The purchase if found (otherwise null).</returns>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.Save(DatabaseEditingProgram.database.databaseEntities.Purchase)">
+            <summary>
+            Saves a purchase to the database. If the purchase does not exist, it is inserted. If it does, it is updated.
+            </summary>
+            <param name="purchase">The purchase to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.database.dao.PurchaseDAO.RemoveIncorrectFormat">
+            <summary>
+            Ensures the purchase table follows the expected schema. If it does not, the table gets deleted.
+            Serves as a security check - if there is already a table with the name "purchase" that does not fit
+            our schema and we do not drop it, it might cause some issues.
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.Book">
+            <summary>
+			Class representing a book in the program.
+			The book contains id, title, isSigned (bool), price and its linked to the Genre and Publisher classes.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.Customer">
+            <summary>
+			Class representing a customer in the program.
+			The book customer id, name, surname and dateOfBirth (DateTime).
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.Genre">
+            <summary>
+			Class representing a genre in the program.
+			The book genre id, and a name.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.IDatabaseEntity">
+            <summary>
+			Generic DatabaseEntity interface for all database entities.
+			It contains only id. All database entities have to implenet this interface and therfor they have to contain id.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.Publisher">
+            <summary>
+			Class representing a publisher in the program.
+			The book publisher id, name, motto and isActive (bool).
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.databaseEntities.Purchase">
+            <summary>
+			Class representing a purchase in the program.
+			The purchase contains id, surcharge, final price, date (DateTime), time (TimeSpan) and its linked to the Book and Customer classes.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.database.DatabaseSingleton">
+            <summary>
+			Class handeling connection to the database.
+			It loads data from a configuration file.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.BookTableManager">
+            <summary>
+			Manages connecting frontend book table with its DAO class by using implemented command methods.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.BookTableManager.#ctor(System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Genre},System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Publisher})">
+            <summary>
+            BookTableManager constructor.
+            Assigns values to the implemented collections and adds OnCollectionChanged methods to them.
+            By doing that we make sure that whenever an item is deleted from one of these collections (which are bound to the book)
+            the book reloads.
+            </summary>
+            <param name="loadedGenres"></param>
+            <param name="loadedPublishers"></param>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.CustomerTableManager">
+            <summary>
+			Manages connecting frontend customer table with its DAO class by using implemented command methods.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.GenreTableManager">
+            <summary>
+			Manages connecting frontend genre table with its DAO class by using implemented command methods.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.PublisherTableManager">
+            <summary>
+			Manages connecting frontend publisher table with its DAO class by using implemented command methods.
+		</summary>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.PurchaseTableManager">
+            <summary>
+			Manages connecting frontend purchase table with its DAO class by using implemented command methods.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.PurchaseTableManager.#ctor(System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Customer},System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Book},System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Genre},System.Collections.ObjectModel.ObservableCollection{DatabaseEditingProgram.database.databaseEntities.Publisher})">
+            <summary>
+            PurchaseTableManager constructor.
+            Assigns values to the implemented collections and adds OnCollectionChanged methods to them.
+            By doing that we make sure that whenever an item is deleted from one of these collections (which are bound to the purchase)
+            the purchase reloads.
+            </summary>
+            <param name="loadedCustomers"></param>
+            <param name="loadedBooks"></param>
+            <param name="loadedGenres"></param>
+            <param name="loadedPublishers"></param>
+        </member>
+        <member name="T:DatabaseEditingProgram.managers.TableManager`1">
+            <summary>
+			Abstract class for all TableManagers.
+			It connects the frontend tables with DAOs.
+			It contains commands which can be called in the DatabaseWindow.xaml.
+		</summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.#ctor(DatabaseEditingProgram.database.dao.IDAO{`0})">
+            <summary>
+            Table manager constructor.
+            All commands are assigned here.
+            </summary>
+            <param name="dao"></param>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.Save(`0)">
+            <summary>
+            Saves the specified entity to the database.
+            </summary>
+            <param name="item">The entity to save.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.Delete(`0)">
+            <summary>
+            Deletes the specified entity from the database and removes it from the collection.
+            </summary>
+            <param name="item">The entity to delete.</param>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.Reload">
+            <summary>
+            Reloads the data from the database and updates the collection.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.AddNew">
+            <summary>
+            Adds a new entity.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.Import">
+            <summary>
+            Imports data from an external source.
+            </summary>
+        </member>
+        <member name="M:DatabaseEditingProgram.managers.TableManager`1.Export">
+            <summary>
+            Exports data to an external destination.
+            </summary>
+        </member>
+    </members>
+</doc>

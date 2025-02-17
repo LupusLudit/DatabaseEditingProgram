@@ -2,6 +2,7 @@
 
 namespace DatabaseEditingProgram.database.databaseEntities
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="Purchase"]/*'/>
     public class Purchase : IDatabaseEntity, INotifyPropertyChanged
     {
         private int id;

@@ -5,6 +5,7 @@ using System.Windows;
 
 namespace DatabaseEditingProgram.managers
 {
+    /// <include file='../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="GenreTableManager"]/*'/>
     public class GenreTableManager : TableManager<Genre>
     {
         public GenreTableManager() : base(new GenreDAO()) {}

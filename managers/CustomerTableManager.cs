@@ -5,6 +5,7 @@ using System.Windows;
 
 namespace DatabaseEditingProgram.managers
 {
+    /// <include file='../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="CustomerTableManager"]/*'/>
     public class CustomerTableManager : TableManager<Customer>
     {
         public CustomerTableManager() : base(new CustomerDAO()) { }

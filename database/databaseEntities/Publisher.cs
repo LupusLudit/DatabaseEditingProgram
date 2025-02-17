@@ -1,6 +1,7 @@
 ﻿
 namespace DatabaseEditingProgram.database.databaseEntities
 {
+    /// <include file='../../docs/DatabaseProgramDocs.xml' path='MyDocs/MyMembers[@name="Publisher"]/*'/>
     public class Publisher : IDatabaseEntity
     {
         private int id;
