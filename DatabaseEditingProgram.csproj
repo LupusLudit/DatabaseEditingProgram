@@ -7,7 +7,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\micha\Projects\school\c#\special\DatabaseEditingProgram\docs\TechDocs.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
