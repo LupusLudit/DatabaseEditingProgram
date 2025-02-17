@@ -36,5 +36,6 @@ Sometimes after editing a "bound" table it is neccessery to reload the "dependen
 ## Importing and exporting
 Some tables allow data for import/export. This is done simply by clicking on the buttons below the table ("Import CSV", "Export CSV").
 
+## Final note
 I hope you will find my project usefull and that you will enjoy using it.
 Extra note: This program is being used as a school project
