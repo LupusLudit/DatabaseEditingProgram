@@ -25,10 +25,7 @@ namespace DatabaseEditingProgram.database
                 consStringBuilder.MultipleActiveResultSets = true;
 
                 conn = new SqlConnection(consStringBuilder.ConnectionString);
-                if (conn.State != System.Data.ConnectionState.Open)
-                {
-                    conn.Open();
-                }
+                conn.Open();
             }
             return conn;
         }

@@ -23,29 +23,6 @@ namespace DatabaseEditingProgram.managers
             }
         }
 
-
-
-        protected override void Delete(Genre genre)
-        {
-            if (genre == null) return;
-            DAO.Delete(genre);
-            Items.Remove(genre);
-        }
-        protected override void Save(Genre genre)
-        {
-            if (genre == null) return;
-            DAO.Save(genre);
-        }
-
-        protected override void Reload()
-        {
-            Items.Clear();
-            var allGenres = DAO.GetAll();
-            foreach (var genre in allGenres)
-            {
-                Items.Add(genre);
-            }
-        }
         protected override void Import()
         {
             if (DAO.ForbiddenTablesNotEmpty())

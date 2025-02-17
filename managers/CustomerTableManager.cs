@@ -24,29 +24,6 @@ namespace DatabaseEditingProgram.managers
 
         }
 
-        protected override void Delete(Customer customer)
-        {
-            if (customer == null) return;
-            DAO.Delete(customer);
-            Items.Remove(customer);
-        }
-
-        protected override void Save(Customer customer)
-        {
-            if (customer == null) return;
-            DAO.Save(customer);
-        }
-
-        protected override void Reload()
-        {
-            Items.Clear();
-            var allCustomers = DAO.GetAll();
-            foreach (var customer in allCustomers)
-            {
-                Items.Add(customer);
-            }
-        }
-
         protected override void Import()
         {
             if (DAO.ForbiddenTablesNotEmpty())

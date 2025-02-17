@@ -38,29 +38,6 @@ namespace DatabaseEditingProgram.managers
                     "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-
-        protected override void Delete(Book book)
-        {
-            if (book == null) return;
-            DAO.Delete(book);
-            Items.Remove(book);
-        }
-
-        protected override void Save(Book book)
-        {
-            if (book == null) return;
-            DAO.Save(book);
-        }
-
-        protected override void Reload()
-        {
-            Items.Clear();
-            var allBooks = DAO.GetAll();
-            foreach (var book in allBooks)
-            {
-                Items.Add(book);
-            }
-        }
         //Not implemented for this class
         protected override void Import() { }
         protected override void Export() { }

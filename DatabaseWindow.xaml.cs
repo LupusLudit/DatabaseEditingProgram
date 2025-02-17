@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using DatabaseEditingProgram.database;
 
 namespace DatabaseEditingProgram
@@ -12,6 +13,23 @@ namespace DatabaseEditingProgram
             this.databaseName = databaseName;
             TitleLabel.Content = $"Connected to database \"{databaseName}\"";
         }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            string helpUrl = "https://github.com/LupusLudit/DatabaseEditingProgram";
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = helpUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to open the help page", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             DatabaseSingleton.CloseConnection();
@@ -19,5 +37,6 @@ namespace DatabaseEditingProgram
             new MainWindow().Show();
             this.Close();
         }
+
     }
 }

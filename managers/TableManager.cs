@@ -2,6 +2,7 @@
 using DatabaseEditingProgram.database.dao;
 using DatabaseEditingProgram.database.databaseEntities;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DatabaseEditingProgram.managers
@@ -30,12 +31,54 @@ namespace DatabaseEditingProgram.managers
             ReloadCommand = new UniversalButtonCommand(Reload);
         }
 
-        protected abstract void Save(T item);
-        protected abstract void Delete(T item);
+        protected void Save(T item)
+        {
+            try
+            {
+                if (item == null) return;
+                DAO.Save(item);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        protected void Delete(T item)
+        {
+            try
+            {
+                if (item == null) return;
+                DAO.Delete(item);
+                Items.Remove(item);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        protected void Reload()
+        {
+            try
+            {
+                Items.Clear();
+                var allBooks = DAO.GetAll();
+                foreach (var book in allBooks)
+                {
+                    Items.Add(book);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         protected abstract void AddNew();
         protected abstract void Import();
         protected abstract void Export();
-        protected abstract void Reload();
 
 
     }

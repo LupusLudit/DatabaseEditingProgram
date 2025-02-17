@@ -224,8 +224,13 @@
                             </DataGrid>
                         </ScrollViewer>
                         <Border Grid.Row="2" Background="LightGray">
-                            <Button Content="Add New" Command="{Binding DataContext.BookManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                  Margin="2" HorizontalAlignment="Center" Height="20"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                                <Button Content="Add New" Command="{Binding DataContext.BookManager.AddCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        Height="20" Margin="5,0,50,0"/>
+
+                                <Button Content="Refresh" Command="{Binding DataContext.BookManager.ReloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                         Height="20" Margin="5,0,5,0"/>
+                            </StackPanel>
                         </Border>
                     </Grid>
                 </Border>
@@ -428,6 +433,9 @@
 
             </Grid>
         </Grid>
+
+        <Button x:Name="HelpButton" Content="Help?" HorizontalAlignment="Left" Grid.Row="2"
+        Width="90" Height="25" Click="HelpButton_Click" Margin="50,20,0,0"/>
 
         <Button x:Name="DisconnectButton" Content="Disconnect" HorizontalAlignment="Right" Grid.Row="2"
         Width="90" Height="25" Click="DisconnectButton_Click" Margin="0,20,50,0"/>

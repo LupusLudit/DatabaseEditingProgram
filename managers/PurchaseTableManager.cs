@@ -47,29 +47,6 @@ namespace DatabaseEditingProgram.managers
             }
         }
 
-        protected override void Delete(Purchase purchase)
-        {
-            if (purchase == null) return;
-            DAO.Delete(purchase);
-            Items.Remove(purchase);
-        }
-
-        protected override void Save(Purchase purchase)
-        {
-            if (purchase == null) return;
-            DAO.Save(purchase);
-        }
-
-        protected override void Reload()
-        {
-            Items.Clear();
-            var allPurchases = DAO.GetAll();
-            foreach (var purchase in allPurchases)
-            {
-                Items.Add(purchase);
-            }
-        }
-
         //Not implemented for this class
         protected override void Import() { }
         protected override void Export() { }
